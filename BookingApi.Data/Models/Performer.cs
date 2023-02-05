@@ -14,4 +14,10 @@ public partial class Performer
     public string Description { get; set; }
 
     public int ReservationTime { get; set; }
+
+    public Guid CompanyId { get; set; }
+
+    public virtual Company Company { get; set; }
+
+    public virtual ICollection<Reservation> Reservation { get; } = new List<Reservation>();
 }

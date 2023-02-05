@@ -16,4 +16,8 @@ public partial class User
     public string EmailAddress { get; set; }
 
     public bool Blocked { get; set; }
+
+    public virtual ICollection<Brand> Brand { get; } = new List<Brand>();
+
+    public virtual ICollection<Reservation> Reservation { get; } = new List<Reservation>();
 }

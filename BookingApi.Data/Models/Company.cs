@@ -18,4 +18,8 @@ public partial class Company
     public string Description { get; set; }
 
     public string Address { get; set; }
+
+    public virtual Brand Brand { get; set; }
+
+    public virtual ICollection<Performer> Performer { get; } = new List<Performer>();
 }

@@ -16,6 +16,8 @@ public partial class ReservationContext : DbContext
 
     public virtual DbSet<Audit> Audit { get; set; }
 
+    public virtual DbSet<Brand> Brand { get; set; }
+
     public virtual DbSet<Company> Company { get; set; }
 
     public virtual DbSet<Performer> Performer { get; set; }
@@ -40,6 +42,21 @@ public partial class ReservationContext : DbContext
             entity.Property(e => e.Timestamp).HasColumnType("datetime");
         });
 
+        modelBuilder.Entity<Brand>(entity =>
+        {
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Description)
+                .IsRequired()
+                .HasMaxLength(500);
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(255);
+
+            entity.HasOne(d => d.User).WithMany(p => p.Brand)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
         modelBuilder.Entity<Company>(entity =>
         {
             entity.Property(e => e.Id).ValueGeneratedNever();
@@ -55,6 +72,10 @@ public partial class ReservationContext : DbContext
             entity.Property(e => e.ShortName)
                 .IsRequired()
                 .HasMaxLength(100);
+
+            entity.HasOne(d => d.Brand).WithMany(p => p.Company)
+                .HasForeignKey(d => d.BrandId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<Performer>(entity =>
@@ -66,6 +87,10 @@ public partial class ReservationContext : DbContext
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(100);
+
+            entity.HasOne(d => d.Company).WithMany(p => p.Performer)
+                .HasForeignKey(d => d.CompanyId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<Reservation>(entity =>
@@ -76,6 +101,14 @@ public partial class ReservationContext : DbContext
             entity.Property(e => e.UserEmailAddress)
                 .IsRequired()
                 .HasMaxLength(255);
+
+            entity.HasOne(d => d.Performer).WithMany(p => p.Reservation)
+                .HasForeignKey(d => d.PerformerId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.User).WithMany(p => p.Reservation)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<User>(entity =>

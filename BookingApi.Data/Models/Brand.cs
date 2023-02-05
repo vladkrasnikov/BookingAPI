@@ -5,21 +5,17 @@ using System.Collections.Generic;
 
 namespace BookingApi.Data.Models;
 
-public partial class Reservation
+public partial class Brand
 {
     public Guid Id { get; set; }
 
-    public string UserEmailAddress { get; set; }
+    public string Name { get; set; }
 
-    public DateTime StartDate { get; set; }
-
-    public DateTime EndDate { get; set; }
-
-    public Guid PerformerId { get; set; }
+    public string Description { get; set; }
 
     public Guid UserId { get; set; }
 
-    public virtual Performer Performer { get; set; }
+    public virtual ICollection<Company> Company { get; } = new List<Company>();
 
     public virtual User User { get; set; }
 }
