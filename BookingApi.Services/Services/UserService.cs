@@ -10,22 +10,21 @@ namespace BookingApi.Services.Services;
 
 public class UserService : IUserService
 {
-    private PasswordHasher<UserModel> _userModelHasher;
     private readonly IUserRepository _userRepository;
 
-    public UserService(PasswordHasher<UserModel> userModelHasher, IUserRepository userRepository)
+    public UserService(IUserRepository userRepository)
     {
-        _userModelHasher = userModelHasher;
         _userRepository = userRepository;
     }
 
     public async Task<Result<UserModel>> CreateAsync(CreateUserRequestModel createUserRequestModel)
     {
+        var userModelHasher = new PasswordHasher<UserModel>();
         var userEntity = createUserRequestModel.Adapt<User>();
-        userEntity.Password = _userModelHasher.HashPassword(new UserModel(), createUserRequestModel.Password);
+        userEntity.Password = userModelHasher.HashPassword(new UserModel(), createUserRequestModel.Password);
         await _userRepository.CreateAsync(userEntity);
         //add record to audit table
-        
+
         return Result.Ok(userEntity.Adapt<UserModel>());
     }
 }

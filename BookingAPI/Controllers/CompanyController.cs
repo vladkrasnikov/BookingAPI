@@ -1,9 +1,6 @@
 ﻿using BookingAPI.Models.Company;
 using BookingApi.Services.Interfaces;
-using BookingApi.Services.Model.Company;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using FluentResults;
 using Mapster;
 
 namespace BookingAPI.Controllers

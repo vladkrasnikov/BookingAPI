@@ -1,14 +1,13 @@
-﻿using BookingApi.Data.Models;
-using BookingAPI.Models.User;
+﻿using BookingAPI.Models.User;
 using BookingApi.Services.Interfaces;
 using BookingApi.Services.Model.User;
-using FluentResults;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
 
 namespace BookingAPI.Controllers;
 
+[Route("api/[controller]")]
+[ApiController]
 public class UserController : Controller
 {
     private readonly IUserService _userService;
@@ -18,10 +17,15 @@ public class UserController : Controller
         _userService = userService;
     }
     
+    /// <summary>
+    /// Endpoint to create a new user
+    /// </summary>
+    /// <param name="createUserRequest"></param>
+    /// <returns></returns>
     [HttpPost]
-    [ProducesResponseType(201, Type = typeof(CreateUserResponse))]
-    [ProducesResponseType(404)]
-    [ProducesResponseType(500)]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateUserResponse))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Create(
         CreateUserRequest createUserRequest)
     {
