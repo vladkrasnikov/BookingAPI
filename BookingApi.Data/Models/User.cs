@@ -14,6 +14,7 @@ public partial class User
     public string LastName { get; set; }
 
     public string EmailAddress { get; set; }
+    public string Password { get; set; }
 
     public bool Blocked { get; set; }
 
