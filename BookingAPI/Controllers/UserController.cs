@@ -2,6 +2,7 @@
 using BookingApi.Services.Interfaces;
 using BookingApi.Services.Model.User;
 using Mapster;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingAPI.Controllers;
@@ -31,5 +32,17 @@ public class UserController : Controller
     {
         var result = await _userService.CreateAsync(createUserRequest.Adapt<CreateUserRequestModel>());
         return Ok(result.Value.Adapt<CreateUserResponse>());
+    }
+
+    [HttpPost]
+    [Route("verify")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> Verify(
+        string emailAddress, string password)
+    {
+        var result = await _userService.VerityAsync(emailAddress, password);
+        if (result == PasswordVerificationResult.Success) return Ok();
+            return Unauthorized(result);
     }
 }
