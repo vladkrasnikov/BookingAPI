@@ -29,20 +29,20 @@ namespace BookingAPI.Controllers
             var mappedResult = result.Value.Adapt<IEnumerable<GetCompanyResponse>>();
             return Ok(mappedResult);
         }
-        
+
         /// <summary>
         /// Get single company
         /// </summary>
         [HttpGet("{id}")]
         [SwaggerResponse(StatusCodes.Status200OK, "Company found", typeof(GetCompanyResponse))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Company not found")]
-        public async Task<IActionResult> GetCompanies(GetCompanyRequest request)
+        public async Task<IActionResult> GetCompanies([FromRoute] Guid id)
         {
-            var result = await _companyService.GetAsync(request.Id);
+            var result = await _companyService.GetAsync(id);
             var mappedResult = result.Value.Adapt<GetCompanyResponse>();
             return Ok(mappedResult);
         }
-        
+
         /// <summary>
         /// Create a company
         /// </summary>
