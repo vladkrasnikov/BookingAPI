@@ -18,4 +18,19 @@ public class CompanyRepository : ICompanyRepository
     {
         return await _context.Company.ToListAsync();
     }
+
+    public async Task<Result<Company>> GetAsync(Guid id)
+    {
+        return await _context.Company.FirstOrDefaultAsync(x => x.Id == id);
+    }
+
+    public async Task<Result<Company>> CreateAsync(Company company)
+    {
+        company.Id = Guid.NewGuid();
+
+        await _context.Company.AddAsync(company);
+        await _context.SaveChangesAsync();
+
+        return company;
+    }
 }

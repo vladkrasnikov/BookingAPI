@@ -1,4 +1,5 @@
 ﻿using BookingApi.Data.Interfaces.Repository;
+using BookingApi.Data.Models;
 using BookingApi.Services.Interfaces;
 using BookingApi.Services.Model.Company;
 using FluentResults;
@@ -14,10 +15,27 @@ public class CompanyService : ICompanyService
     {
         _companyRepository = companyRepository;
     }
+
     public async Task<Result<List<CompanyModel>>> GetListAsync()
     {
         var result = await _companyRepository.GetListAsync();
-        var mappedModel = result.Value.Adapt<List<CompanyModel>>();
-        return result.IsFailed ? result.ToResult() : Result.Ok(mappedModel);
+        return ToResult<List<CompanyModel>, IEnumerable<Company>>(result);
+    }
+
+    public async Task<Result<CompanyModel>> GetAsync(Guid id)
+    {
+        var result = await _companyRepository.GetAsync(id);
+        return ToResult<CompanyModel, Company>(result);
+    }
+
+    public async Task<Result<CompanyModel>> CreateAsync(CreateCompanyModel createCompanyModel)
+    {
+        var result = await _companyRepository.CreateAsync(createCompanyModel.Adapt<Company>());
+        return ToResult<CompanyModel, Company>(result);
+    }
+
+    private static Result<T> ToResult<T, T1>(Result<T1> result)
+    {
+        return result.IsFailed ? result.ToResult() : Result.Ok(result.Value.Adapt<T>());
     }
 }
