@@ -1,8 +1,9 @@
-﻿using BookingApi.Services.Model.Performer;
+﻿using BookingApi.Services.Model.Company;
+using BookingApi.Services.Model.Performer;
 
 namespace BookingAPI.Models.Brand;
 
-public abstract class GetBrandResponse
+public class GetBrandResponse
 {    
     public Guid Id { get; set; }
 
@@ -13,6 +14,8 @@ public abstract class GetBrandResponse
     public string Description { get; set; }
 
     public string Address { get; set; }
+
+    public CompanyModel Company { get; set; }
 
     public IEnumerable<PerformerModel> Performer { get; set; }
 }

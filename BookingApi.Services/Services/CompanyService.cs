@@ -30,6 +30,7 @@ public class CompanyService : ICompanyService
 
     public async Task<Result<CompanyModel>> CreateAsync(CreateCompanyModel createCompanyModel)
     {
+        // Check if company with the same name already exists, return 400 not 500
         var result = await _companyRepository.CreateAsync(createCompanyModel.Adapt<Company>());
         return ToResult<Company, CompanyModel>(result);
     }

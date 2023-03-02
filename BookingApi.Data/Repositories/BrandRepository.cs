@@ -25,8 +25,14 @@ public class BrandRepository : IBrandRepository
         return await _context.Brand.FirstOrDefaultAsync(x => x.Id == brandId);
     }
 
+    public async Task<Brand> GetAsync(string brandName)
+    {
+        return await _context.Brand.FirstOrDefaultAsync(x => x.Name.Equals(brandName));
+    }
+
     public async Task<Brand> CreateAsync(Brand brand)
     {
+        brand.Id = Guid.NewGuid();
         await _context.Brand.AddAsync(brand);
         await _context.SaveChangesAsync();
         return brand;
