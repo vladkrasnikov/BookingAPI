@@ -13,9 +13,11 @@ public partial class Brand
 
     public string Description { get; set; }
 
-    public Guid UserId { get; set; }
+    public string Address { get; set; }
 
-    public virtual ICollection<Company> Company { get; } = new List<Company>();
+    public Guid CompanyId { get; set; }
 
-    public virtual User User { get; set; }
+    public virtual Company Company { get; set; }
+
+    public virtual ICollection<Performer> Performer { get; } = new List<Performer>();
 }

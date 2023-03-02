@@ -19,23 +19,23 @@ public class CompanyService : ICompanyService
     public async Task<Result<List<CompanyModel>>> GetListAsync()
     {
         var result = await _companyRepository.GetListAsync();
-        return ToResult<List<CompanyModel>, IEnumerable<Company>>(result);
+        return ToResult<IEnumerable<Company>, List<CompanyModel>>(result);
     }
 
     public async Task<Result<CompanyModel>> GetAsync(Guid id)
     {
         var result = await _companyRepository.GetAsync(id);
-        return ToResult<CompanyModel, Company>(result);
+        return ToResult<Company, CompanyModel>(result);
     }
 
     public async Task<Result<CompanyModel>> CreateAsync(CreateCompanyModel createCompanyModel)
     {
         var result = await _companyRepository.CreateAsync(createCompanyModel.Adapt<Company>());
-        return ToResult<CompanyModel, Company>(result);
+        return ToResult<Company, CompanyModel>(result);
     }
 
-    private static Result<T> ToResult<T, T1>(Result<T1> result)
+    private static Result<TO> ToResult<TFrom, TO>(Result<TFrom> result)
     {
-        return result.IsFailed ? result.ToResult() : Result.Ok(result.Value.Adapt<T>());
+        return result.IsFailed ? result.ToResult() : Result.Ok(result.Value.Adapt<TO>());
     }
 }

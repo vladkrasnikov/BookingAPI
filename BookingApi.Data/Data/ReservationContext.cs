@@ -45,6 +45,9 @@ public partial class ReservationContext : DbContext
         modelBuilder.Entity<Brand>(entity =>
         {
             entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Address)
+                .IsRequired()
+                .HasMaxLength(300);
             entity.Property(e => e.Description)
                 .IsRequired()
                 .HasMaxLength(500);
@@ -52,17 +55,14 @@ public partial class ReservationContext : DbContext
                 .IsRequired()
                 .HasMaxLength(255);
 
-            entity.HasOne(d => d.User).WithMany(p => p.Brand)
-                .HasForeignKey(d => d.UserId)
+            entity.HasOne(d => d.Company).WithMany(p => p.Brand)
+                .HasForeignKey(d => d.CompanyId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<Company>(entity =>
         {
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Address)
-                .IsRequired()
-                .HasMaxLength(300);
             entity.Property(e => e.Description)
                 .IsRequired()
                 .HasMaxLength(500);
@@ -73,8 +73,8 @@ public partial class ReservationContext : DbContext
                 .IsRequired()
                 .HasMaxLength(100);
 
-            entity.HasOne(d => d.Brand).WithMany(p => p.Company)
-                .HasForeignKey(d => d.BrandId)
+            entity.HasOne(d => d.User).WithMany(p => p.Company)
+                .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
@@ -88,8 +88,8 @@ public partial class ReservationContext : DbContext
                 .IsRequired()
                 .HasMaxLength(100);
 
-            entity.HasOne(d => d.Company).WithMany(p => p.Performer)
-                .HasForeignKey(d => d.CompanyId)
+            entity.HasOne(d => d.Brand).WithMany(p => p.Performer)
+                .HasForeignKey(d => d.BrandId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
@@ -125,6 +125,9 @@ public partial class ReservationContext : DbContext
             entity.Property(e => e.LastName)
                 .IsRequired()
                 .HasMaxLength(200);
+            entity.Property(e => e.Password)
+                .IsRequired()
+                .HasMaxLength(255);
         });
 
         OnModelCreatingPartial(modelBuilder);

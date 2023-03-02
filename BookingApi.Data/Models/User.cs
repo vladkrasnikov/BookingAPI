@@ -14,11 +14,12 @@ public partial class User
     public string LastName { get; set; }
 
     public string EmailAddress { get; set; }
-    public string Password { get; set; }
 
     public bool Blocked { get; set; }
 
-    public virtual ICollection<Brand> Brand { get; } = new List<Brand>();
+    public string Password { get; set; }
+
+    public virtual ICollection<Company> Company { get; } = new List<Company>();
 
     public virtual ICollection<Reservation> Reservation { get; } = new List<Reservation>();
 }

@@ -9,17 +9,15 @@ public partial class Company
 {
     public Guid Id { get; set; }
 
-    public Guid BrandId { get; set; }
-
     public string Name { get; set; }
 
     public string ShortName { get; set; }
 
     public string Description { get; set; }
 
-    public string Address { get; set; }
+    public Guid UserId { get; set; }
 
-    public virtual Brand Brand { get; set; }
+    public virtual ICollection<Brand> Brand { get; } = new List<Brand>();
 
-    public virtual ICollection<Performer> Performer { get; } = new List<Performer>();
+    public virtual User User { get; set; }
 }

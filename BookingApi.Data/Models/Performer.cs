@@ -15,9 +15,9 @@ public partial class Performer
 
     public int ReservationTime { get; set; }
 
-    public Guid CompanyId { get; set; }
+    public Guid BrandId { get; set; }
 
-    public virtual Company Company { get; set; }
+    public virtual Brand Brand { get; set; }
 
     public virtual ICollection<Reservation> Reservation { get; } = new List<Reservation>();
 }
