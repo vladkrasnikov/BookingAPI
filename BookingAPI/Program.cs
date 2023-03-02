@@ -18,13 +18,14 @@ builder.Services.AddCors(options =>
     options.AddPolicy(myAllowSpecificOrigins,
         policy =>
         {
-            policy.WithOrigins("https://localhost",
-                "http://localhost");
+            policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
         });
 });
 
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IUserService, UserService>();
+
+
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuditRepository, AuditRepository>();
