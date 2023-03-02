@@ -1,4 +1,5 @@
 ﻿using BookingApi.Data.Interfaces.Repository;
+using BookingApi.Data.Models;
 using BookingApi.Services.Interfaces;
 using BookingApi.Services.Model.Brand;
 using Mapster;
@@ -26,9 +27,10 @@ public class BrandService : IBrandService
         return brands.Adapt<IEnumerable<BrandModel>>();
     }
 
-    public Task<BrandModel> CreateAsync(CreateBrandModel brand)
+    public async Task<BrandModel> CreateAsync(CreateBrandModel brand)
     {
-        throw new NotImplementedException();
+        await _brandRepository.CreateAsync(brand.Adapt<Brand>());
+        return brand.Adapt<BrandModel>();
     }
 
     public Task<BrandModel> UpdateAsync(BrandModel brand)
