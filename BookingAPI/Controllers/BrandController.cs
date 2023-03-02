@@ -25,8 +25,17 @@ public class BrandController : ControllerBase
         return Ok(mappedResult);
     }
     
-    [HttpPost]
+    [HttpGet("{id}")]
     [ProducesResponseType(typeof(GetBrandResponse), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetBrand([FromRoute] Guid id)
+    {
+        var result = await _brandService.GetAsync(id);
+        var mappedResult = result.Adapt<GetBrandResponse>();
+        return Ok(mappedResult);
+    }
+    
+    [HttpPost]
+    [ProducesResponseType(typeof(GetBrandResponse), StatusCodes.Status201Created)]
     public async Task<IActionResult> CreateBrand([FromBody] CreateBrandRequest request)
     {
         var result = await _brandService.CreateAsync(request.Adapt<CreateBrandModel>());

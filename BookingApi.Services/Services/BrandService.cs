@@ -15,9 +15,9 @@ public class BrandService : IBrandService
         _brandRepository = brandRepository;
     }
     
-    public async Task<BrandModel> GetByIdAsync(Guid brandId)
+    public async Task<BrandModel> GetAsync(Guid brandId)
     {
-        var brandEntity = await _brandRepository.GetByIdAsync(brandId);
+        var brandEntity = await _brandRepository.GetAsync(brandId);
         return brandEntity.Adapt<BrandModel>();
     }
 

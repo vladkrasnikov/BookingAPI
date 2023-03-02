@@ -20,7 +20,7 @@ public class BrandRepository : IBrandRepository
         return await _context.Brand.ToListAsync();
     }
 
-    public async Task<Brand> GetByIdAsync(Guid brandId)
+    public async Task<Brand> GetAsync(Guid brandId)
     {
         return await _context.Brand.FirstOrDefaultAsync(x => x.Id == brandId);
     }
