@@ -1,4 +1,7 @@
-﻿using BookingApi.Services.Interfaces;
+﻿using BookingAPI.Models.Brand;
+using BookingApi.Services.Interfaces;
+using BookingApi.Services.Model.Brand;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingAPI.Controllers;
@@ -8,8 +11,26 @@ namespace BookingAPI.Controllers;
 public class BrandController : ControllerBase
 {
     private readonly IBrandService _brandService;
-    public BrandController()
+    public BrandController(IBrandService brandService)
     {
-        
+        _brandService = brandService;
+    }
+    
+    [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<GetBrandResponse>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetBrands()
+    {
+        var result = await _brandService.GetAsync();
+        var mappedResult = result.Adapt<IEnumerable<GetBrandResponse>>();
+        return Ok(mappedResult);
+    }
+    
+    [HttpPost]
+    [ProducesResponseType(typeof(GetBrandResponse), StatusCodes.Status200OK)]
+    public async Task<IActionResult> CreateBrand([FromBody] CreateBrandRequest request)
+    {
+        var result = await _brandService.CreateAsync(request.Adapt<CreateBrandModel>());
+        var mappedResult = result.Adapt<GetBrandResponse>();
+        return Ok(mappedResult);
     }
 }

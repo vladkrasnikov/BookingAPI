@@ -20,12 +20,13 @@ public class BrandService : IBrandService
         return brandEntity.Adapt<BrandModel>();
     }
 
-    public Task<IEnumerable<BrandModel>> GetAsync()
+    public async Task<IEnumerable<BrandModel>> GetAsync()
     {
-        throw new NotImplementedException();
+        var brands = await _brandRepository.GetAsync();
+        return brands.Adapt<IEnumerable<BrandModel>>();
     }
 
-    public Task<BrandModel> CreateAsync(BrandModel brand)
+    public Task<BrandModel> CreateAsync(CreateBrandModel brand)
     {
         throw new NotImplementedException();
     }

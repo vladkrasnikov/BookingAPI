@@ -6,7 +6,7 @@ public interface IBrandService
 {
     Task<BrandModel> GetByIdAsync(Guid brandId);
     Task<IEnumerable<BrandModel>> GetAsync();
-    Task<BrandModel> CreateAsync(BrandModel brand);
+    Task<BrandModel> CreateAsync(CreateBrandModel brand);
     Task<BrandModel> UpdateAsync(BrandModel brand);
     Task DeleteAsync(Guid brandId);
 }
