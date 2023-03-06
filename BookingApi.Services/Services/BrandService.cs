@@ -2,6 +2,7 @@
 using BookingApi.Data.Models;
 using BookingApi.Services.Interfaces;
 using BookingApi.Services.Model.Brand;
+using BookingApi.Services.Extensions;
 using FluentResults;
 using Mapster;
 
@@ -31,7 +32,7 @@ public class BrandService : IBrandService
     public async Task<Result<IEnumerable<BrandModel>>> GetAsync()
     {
         var brands = await _brandRepository.GetAsync();
-        return brands.Adapt<Result<IEnumerable<BrandModel>>>();
+        return brands.EntityToModel<IEnumerable<Brand>, IEnumerable<BrandModel>>();
     }
 
     public async Task<Result<BrandModel>> CreateAsync(CreateBrandModel brand)

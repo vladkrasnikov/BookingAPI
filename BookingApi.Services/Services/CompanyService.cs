@@ -1,5 +1,6 @@
 ﻿using BookingApi.Data.Interfaces.Repository;
 using BookingApi.Data.Models;
+using BookingApi.Services.Extensions;
 using BookingApi.Services.Interfaces;
 using BookingApi.Services.Model.Company;
 using FluentResults;
@@ -19,24 +20,23 @@ public class CompanyService : ICompanyService
     public async Task<Result<List<CompanyModel>>> GetListAsync()
     {
         var result = await _companyRepository.GetListAsync();
-        return ToResult<IEnumerable<Company>, List<CompanyModel>>(result);
+        return result.EntityToModel<IEnumerable<Company>, List<CompanyModel>>();
     }
 
     public async Task<Result<CompanyModel>> GetAsync(Guid id)
     {
         var result = await _companyRepository.GetAsync(id);
-        return ToResult<Company, CompanyModel>(result);
+        return result.EntityToModel<Company, CompanyModel>();
     }
 
     public async Task<Result<CompanyModel>> CreateAsync(CreateCompanyModel createCompanyModel)
     {
-        // Check if company with the same name already exists, return 400 not 500
+        var companyResult = await _companyRepository.GetAsync(createCompanyModel.Name);
+        if(companyResult.IsSuccess)
+        {
+            return Result.Fail<CompanyModel>("Company with the same name already exists");
+        }
         var result = await _companyRepository.CreateAsync(createCompanyModel.Adapt<Company>());
-        return ToResult<Company, CompanyModel>(result);
-    }
-
-    private static Result<TO> ToResult<TFrom, TO>(Result<TFrom> result)
-    {
-        return result.IsFailed ? result.ToResult() : Result.Ok(result.Value.Adapt<TO>());
+        return result.EntityToModel<Company, CompanyModel>();
     }
 }

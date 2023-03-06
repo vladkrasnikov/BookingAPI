@@ -5,10 +5,10 @@ namespace BookingApi.Data.Interfaces.Repository;
 
 public interface IBrandRepository
 {
-    Task<IEnumerable<Brand>> GetAsync();
-    Task<Brand> GetAsync(Guid brandId);
-    Task<Brand> GetAsync(string brandName);
-    Task<Brand> CreateAsync(Brand brand);
-    Task<Brand> UpdateAsync(Brand brand);
+    Task<Result<IEnumerable<Brand>>> GetAsync();
+    Task<Result<Brand>> GetAsync(Guid brandId);
+    Task<Result<Brand>> GetAsync(string brandName);
+    Task<Result<Brand>> CreateAsync(Brand brand);
+    Task<Result<Brand>> UpdateAsync(Brand brand);
     Task<Result> DeleteAsync(Guid brandId);
 }

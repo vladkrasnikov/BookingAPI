@@ -21,7 +21,26 @@ public class CompanyRepository : ICompanyRepository
 
     public async Task<Result<Company>> GetAsync(Guid id)
     {
-        return await _context.Company.FirstOrDefaultAsync(x => x.Id == id);
+        var companyEntity = await _context.Company.FirstOrDefaultAsync(x => x.Id == id);
+        
+        if (companyEntity == null)
+        {
+            return Result.Fail<Company>("Company not found");
+        }
+        
+        return Result.Ok(companyEntity);
+    }
+
+    public async Task<Result<Company>> GetAsync(string name)
+    {
+        var companyEntity = await _context.Company.FirstOrDefaultAsync(x => x.Name.Equals(name));
+        
+        if (companyEntity == null)
+        {
+            return Result.Fail<Company>("Company not found");
+        }
+        
+        return Result.Ok(companyEntity);
     }
 
     public async Task<Result<Company>> CreateAsync(Company company)
