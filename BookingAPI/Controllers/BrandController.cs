@@ -8,7 +8,7 @@ namespace BookingAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class BrandController : ControllerBase
+public class BrandController : Controller
 {
     private readonly IBrandService _brandService;
     public BrandController(IBrandService brandService)

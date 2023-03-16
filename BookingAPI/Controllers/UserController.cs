@@ -41,7 +41,7 @@ public class UserController : Controller
     public async Task<IActionResult> Verify(
         string emailAddress, string password)
     {
-        var result = await _userService.VerityAsync(emailAddress, password);
+        var result = await _userService.VerifyUserAsync(emailAddress, password);
         if (result == PasswordVerificationResult.Success) return Ok();
             return Unauthorized(result);
     }
