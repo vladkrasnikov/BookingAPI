@@ -2,8 +2,10 @@ using BookingApi.Data.Data;
 using BookingApi.Data.Interfaces.Repository;
 using BookingApi.Data.Repositories;
 using BookingApi.Services.Interfaces;
+using BookingApi.Services.Model.User;
 using BookingApi.Services.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 const string myAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -26,12 +28,15 @@ builder.Services.AddCors(options =>
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
+builder.Services.AddScoped<IPasswordHasher<UserModel>, PasswordHasher<UserModel>>();
 
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuditRepository, AuditRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IBrandRepository, BrandRepository>();
+
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

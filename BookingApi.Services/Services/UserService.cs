@@ -16,18 +16,18 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IAuditRepository _auditRepository;
-    private readonly HttpContext _httpContext;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IPasswordHasher<UserModel> _passwordHasher;
 
     public UserService(
         IUserRepository userRepository,
         IAuditRepository auditRepository,
-        HttpContext httpContext,
+        IHttpContextAccessor httpContextAccessor,
         IPasswordHasher<UserModel> passwordHasher)
     {
         _userRepository = userRepository;
-        _auditRepository = auditRepository;
-        _httpContext = httpContext;
+        _auditRepository = auditRepository; 
+        _httpContextAccessor = httpContextAccessor;
         _passwordHasher = passwordHasher;
     }
 
@@ -70,7 +70,7 @@ public class UserService : IUserService
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-        await _httpContext.SignInAsync(
+        await (_httpContextAccessor.HttpContext ?? throw new InvalidOperationException()).SignInAsync(
             CookieAuthenticationDefaults.AuthenticationScheme,
             new ClaimsPrincipal(identity),
             new AuthenticationProperties
