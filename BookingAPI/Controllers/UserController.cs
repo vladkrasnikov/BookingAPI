@@ -45,4 +45,16 @@ public class UserController : Controller
         if (result == PasswordVerificationResult.Success) return Ok();
             return Unauthorized(result);
     }
+    
+    //Get user by id
+    [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetUserResponse))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Get(
+        Guid id)
+    {
+        var result = await _userService.GetAsync(id);
+        return Ok(result.Value.Adapt<GetUserResponse>());
+    }
 }

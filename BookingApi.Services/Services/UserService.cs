@@ -44,6 +44,15 @@ public class UserService : IUserService
         return Result.Ok(userModel.Adapt<UserModel>());
     }
 
+    public async Task<Result<UserModel>> GetAsync(Guid id)
+    {
+        var userResult = await _userRepository.GetAsync(id);
+        if (userResult.IsFailed)
+            return Result.Fail<UserModel>($"User with id {id} not found");
+
+        return Result.Ok(userResult.Value.Adapt<UserModel>());
+    }
+
     public async Task<Result> SignIn(SignInRequestModel signInRequestModel)
     {
         var userResult = await _userRepository.GetAsync(signInRequestModel.EmailAddress);

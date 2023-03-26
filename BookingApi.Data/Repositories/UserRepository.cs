@@ -27,4 +27,9 @@ public class UserRepository : IUserRepository
     {
         return await _context.User.FirstOrDefaultAsync(x => x.EmailAddress == emailAddress);
     }
+
+    public async Task<Result<User>> GetAsync(Guid id)
+    {
+        return await _context.User.Include(x => x.Company).Include(x => x.Reservation).FirstOrDefaultAsync(x => x.Id == id);
+    }
 }

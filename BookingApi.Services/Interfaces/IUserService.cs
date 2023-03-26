@@ -8,6 +8,7 @@ namespace BookingApi.Services.Interfaces;
 public interface IUserService
 {
     public Task<Result<UserModel>> CreateAsync(CreateUserRequestModel createUserRequestModel);
+    public Task<Result<UserModel>> GetAsync(Guid id);
     public Task<Result> SignIn(SignInRequestModel signInRequestModel);
     public Task<PasswordVerificationResult> VerifyUserAsync(string emailAddress, string password);
 }

@@ -22,12 +22,26 @@ public class BrandRepository : IBrandRepository
 
     public async Task<Result<Brand>> GetAsync(Guid brandId)
     {
-        return await _context.Brand.FirstOrDefaultAsync(x => x.Id == brandId);
+        var brandEntity = await _context.Brand.FirstOrDefaultAsync(x => x.Id == brandId);
+        
+        if (brandEntity is null)
+        {
+            return Result.Fail("Entity not found");
+        }
+
+        return brandEntity;
     }
 
     public async Task<Result<Brand>> GetAsync(string brandName)
     {
-        return await _context.Brand.FirstOrDefaultAsync(x => x.Name.Equals(brandName));
+        var brandEntity = await _context.Brand.FirstOrDefaultAsync(x => x.Name.Equals(brandName));
+        
+        if (brandEntity is null)
+        {
+            return Result.Fail("Entity not found");
+        }
+
+        return brandEntity;
     }
 
     public async Task<Result<Brand>> CreateAsync(Brand brand)
