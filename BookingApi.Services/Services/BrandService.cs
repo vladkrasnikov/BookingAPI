@@ -24,7 +24,7 @@ public class BrandService : IBrandService
         if (brandEntity.IsFailed)
             return brandEntity.ToResult();
         
-        return brandEntity.Adapt<BrandModel>();
+        return brandEntity.Value.Adapt<BrandModel>();
     }
 
     public async Task<Result<BrandModel>> GetAsync(string brandName)
@@ -34,7 +34,7 @@ public class BrandService : IBrandService
         if (brandEntity.IsFailed)
             return brandEntity.ToResult();
         
-        return brandEntity.Adapt<BrandModel>();
+        return brandEntity.Value.Adapt<BrandModel>();
     }
 
     public async Task<Result<IEnumerable<BrandModel>>> GetAsync()

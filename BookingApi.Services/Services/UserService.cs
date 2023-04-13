@@ -78,15 +78,26 @@ public class UserService : IUserService
         };
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        
+        var authProperties = new AuthenticationProperties
+        {
+            IsPersistent = true,
+            ExpiresUtc = DateTime.UtcNow.AddMinutes(30),
+            AllowRefresh = true
+        };
+
+        authProperties.StoreTokens(new[]
+        {
+            new AuthenticationToken
+            {
+                Name = "localhost:3000"
+            }
+        });
 
         await (_httpContextAccessor.HttpContext ?? throw new InvalidOperationException()).SignInAsync(
             CookieAuthenticationDefaults.AuthenticationScheme,
             new ClaimsPrincipal(identity),
-            new AuthenticationProperties
-            {
-                IsPersistent = true,
-                ExpiresUtc = DateTime.UtcNow.AddMinutes(30)
-            });
+            authProperties);
 
         return Result.Ok();
     }
