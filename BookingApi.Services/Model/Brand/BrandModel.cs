@@ -1,5 +1,4 @@
-﻿using BookingApi.Services.Model.Company;
-using BookingApi.Services.Model.Performer;
+﻿using BookingApi.Services.Model.Performer;
 
 namespace BookingApi.Services.Model.Brand;
 
@@ -14,8 +13,6 @@ public class BrandModel
     public string Description { get; set; }
 
     public string Address { get; set; }
-
-    public CompanyModel Company { get; set; }
 
     public IEnumerable<PerformerModel> Performer { get; set; }
 }

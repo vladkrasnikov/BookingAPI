@@ -21,7 +21,7 @@ public class CompanyRepository : ICompanyRepository
 
     public async Task<Result<Company>> GetAsync(Guid id)
     {
-        var companyEntity = await _context.Company.Include(x => x.Brand).FirstOrDefaultAsync(x => x.Id == id);
+        var companyEntity = await _context.Company.Include(x => x.Brand).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         
         if (companyEntity == null)
         {

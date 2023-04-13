@@ -16,9 +16,6 @@ public class ReservationModel
 
     public Guid PerformerId { get; set; }
 
+    [System.Text.Json.Serialization.JsonIgnore]
     public Guid UserId { get; set; }
-
-    public PerformerModel Performer { get; set; }
-
-    public UserModel User { get; set; }
 }
