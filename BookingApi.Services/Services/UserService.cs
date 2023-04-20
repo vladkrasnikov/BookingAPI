@@ -70,9 +70,9 @@ public class UserService : IUserService
 
         var claims = new List<Claim>
         {
-            new(ClaimTypes.Email, signInRequestModel.EmailAddress),
+            new("Id", user.Id.ToString()),
+            new(ClaimTypes.UserData, signInRequestModel.EmailAddress),
             new(ClaimTypes.Name, user.FirstName),
-            new(ClaimTypes.Surname, user.LastName),
             new Claim(ClaimTypes.Expired, user.Blocked.ToString()),
             new(ClaimTypes.Role, "User")
         };
