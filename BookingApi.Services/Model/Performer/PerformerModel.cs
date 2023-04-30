@@ -1,5 +1,4 @@
-﻿using BookingApi.Services.Model.Brand;
-using BookingApi.Services.Model.Reservation;
+﻿using BookingApi.Services.Model.Reservation;
 
 namespace BookingApi.Services.Model.Performer;
 
@@ -11,10 +10,12 @@ public class PerformerModel
 
     public string Description { get; set; }
 
-    public int ReservationTime { get; set; }
+    public short WorkingHourStart { get; set; }
+    
+    public short WorkingHourEnd { get; set; }
 
     [System.Text.Json.Serialization.JsonIgnore]
-    public Guid CompanyId { get; set; }
+    public Guid BrandId { get; set; }
 
     public IEnumerable<ReservationModel> Reservations { get; set; }
 }

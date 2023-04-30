@@ -13,9 +13,11 @@ public partial class Performer
 
     public string Description { get; set; }
 
-    public int ReservationTime { get; set; }
-
     public Guid BrandId { get; set; }
+
+    public short WorkingHourStart { get; set; }
+
+    public short WorkingHourEnd { get; set; }
 
     public virtual Brand Brand { get; set; }
 

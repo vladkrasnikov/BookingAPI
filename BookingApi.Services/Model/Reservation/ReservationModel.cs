@@ -1,7 +1,4 @@
-﻿using BookingApi.Services.Model.Performer;
-using BookingApi.Services.Model.User;
-
-namespace BookingApi.Services.Model.Reservation;
+﻿namespace BookingApi.Services.Model.Reservation;
 
 public class ReservationModel
 {
