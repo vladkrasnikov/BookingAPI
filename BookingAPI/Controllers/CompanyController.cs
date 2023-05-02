@@ -73,5 +73,17 @@ namespace BookingAPI.Controllers
             var mappedResult = result.Value.Adapt<GetCompanyResponse>();
             return Ok(mappedResult);
         }
+        
+        /// <summary>
+        /// Deletes a company
+        /// </summary>
+        [HttpDelete("{id}")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Company deleted")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Company not found")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteCompany([FromRoute] Guid id)
+        {
+            return Ok(await _companyService.DeleteAsync(id));
+        }
     }
 }
