@@ -3,6 +3,7 @@ using BookingApi.Data.Models;
 using BookingApi.Services.Interfaces;
 using BookingApi.Services.Model.Reservation;
 using FluentResults;
+using Mapster;
 
 namespace BookingApi.Services.Services;
 
@@ -33,24 +34,11 @@ public class ReservationService : IReservationService
             return Result.Fail<ReservationModel>("User not found");
         }
 
-        var reservation = new Reservation
-        {
-            PerformerId = createReservationModel.PerformerId,
-            UserId = createReservationModel.UserId,
-            StartDate = createReservationModel.StartDate,
-            EndDate = createReservationModel.EndDate
-        };
+        var reservation = createReservationModel.Adapt<Reservation>();
 
         var createdReservation = await _reservationRepository.CreateAsync(reservation);
 
-        return Result.Ok(new ReservationModel
-        {
-            Id = createdReservation.Id,
-            PerformerId = createdReservation.PerformerId,
-            UserId = createdReservation.UserId,
-            StartDate = createdReservation.StartDate,
-            EndDate = createdReservation.EndDate,
-        });
+        return Result.Ok(createdReservation.Adapt<ReservationModel>());
     }
 
     public async Task<Result<ReservationModel>> GetAsync(Guid id)
@@ -61,14 +49,7 @@ public class ReservationService : IReservationService
             return Result.Fail<ReservationModel>("Reservation not found");
         }
 
-        return Result.Ok(new ReservationModel
-        {
-            Id = reservation.Id,
-            PerformerId = reservation.PerformerId,
-            UserId = reservation.UserId,
-            StartDate = reservation.StartDate,
-            EndDate = reservation.EndDate
-        });
+        return Result.Ok(reservation.Adapt<ReservationModel>());
     }
 
     public async Task<Result<List<ReservationModel>>> GetByPerformerIdAsync(Guid performerId)
@@ -79,14 +60,6 @@ public class ReservationService : IReservationService
             return Result.Fail<List<ReservationModel>>("Reservations not found");
         }
 
-        return Result.Ok(reservations.Select(reservation => new ReservationModel
-        {
-            Id = reservation.Id,
-            PerformerId = reservation.PerformerId,
-            UserId = reservation.UserId,
-            StartDate = reservation.StartDate,
-            EndDate = reservation.EndDate
-        }).ToList());
-
+        return Result.Ok(reservations.Adapt<List<ReservationModel>>());
     }
 }
