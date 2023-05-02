@@ -1,6 +1,6 @@
 ﻿namespace BookingApi.Services.Model.Brand;
 
-public class CreateBrandModel
+public class AddOrUpdateBrandModel
 {
     public Guid CompanyId { get; set; }
     public string Name { get; set; }

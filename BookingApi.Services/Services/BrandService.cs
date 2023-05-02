@@ -43,7 +43,7 @@ public class BrandService : IBrandService
         return brands.EntityToModel<IEnumerable<Brand>, IEnumerable<BrandModel>>();
     }
 
-    public async Task<Result<BrandModel>> CreateAsync(CreateBrandModel brand)
+    public async Task<Result<BrandModel>> CreateAsync(AddOrUpdateBrandModel brand)
     {
         var brandEntity = await GetAsync(brand.Name);
         // Check if brand with the same name already exists, return 400 not 500
@@ -55,13 +55,22 @@ public class BrandService : IBrandService
         return brandResult.Value.Adapt<BrandModel>();
     }
 
-    public Task<Result<BrandModel>> UpdateAsync(BrandModel brand)
+    public async Task<Result<BrandModel>> UpdateAsync(Guid id, AddOrUpdateBrandModel brand)
     {
-        throw new NotImplementedException();
+        var brandEntity = await _brandRepository.GetAsync(id);
+        if (brandEntity.IsFailed)
+            return brandEntity.ToResult();
+        
+        var brandResult = await _brandRepository.UpdateAsync(brand.Adapt<Brand>());
+        return brandResult.Value.Adapt<BrandModel>();
     }
 
-    public Task<Result> DeleteAsync(Guid brandId)
+    public async Task<Result> DeleteAsync(Guid brandId)
     {
-        throw new NotImplementedException();
+        var brandEntity = await _brandRepository.GetAsync(brandId);
+        if (brandEntity.IsFailed)
+            return brandEntity.ToResult();
+        
+        return await _brandRepository.DeleteAsync(brandId);
     }
 }
