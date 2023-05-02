@@ -37,8 +37,8 @@ public class ReservationService : IReservationService
         {
             PerformerId = createReservationModel.PerformerId,
             UserId = createReservationModel.UserId,
-            StartDate = createReservationModel.Start,
-            EndDate = createReservationModel.End
+            StartDate = createReservationModel.StartDate,
+            EndDate = createReservationModel.EndDate
         };
 
         var createdReservation = await _reservationRepository.CreateAsync(reservation);
