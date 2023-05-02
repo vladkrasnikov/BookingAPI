@@ -9,4 +9,8 @@ public interface IPerformerRepository
     public Task<IEnumerable<Performer>> GetByBrandIdAsync(Guid brandId);
 
     public Task<Performer> CreateAsync(Performer performer);
+    
+    public Task<Performer> UpdateAsync(Guid id, Performer performer);
+    
+    public Task DeleteAsync(Guid id);
 }

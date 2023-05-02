@@ -33,4 +33,26 @@ public class PerformerRepository : IPerformerRepository
         
         return performer;
     }
+    
+    public async Task<Performer> UpdateAsync(Guid id, Performer performer)
+    {
+        performer.Id = id;
+        
+        _context.Performer.Update(performer);
+        await _context.SaveChangesAsync();
+        
+        return performer;
+    }
+    
+    public async Task DeleteAsync(Guid id)
+    {
+        var performer = await _context.Performer.FirstOrDefaultAsync(x => x.Id == id);
+        if (performer == null)
+        {
+            return;
+        }
+        
+        _context.Performer.Remove(performer);
+        await _context.SaveChangesAsync();
+    }
 }

@@ -1,6 +1,6 @@
 ﻿namespace BookingApi.Services.Model.Performer;
 
-public class CreatePerformerModel
+public class AddOrUpdatePerformerModel
 {
     public string Name { get; set; }
 

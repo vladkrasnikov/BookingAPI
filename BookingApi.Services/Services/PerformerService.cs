@@ -33,10 +33,33 @@ public class PerformerService : IPerformerService
         return Result.Ok(performer.Adapt<PerformerModel>());
     }
 
-    public async Task<Result<PerformerModel>> CreateAsync(CreatePerformerModel createPerformerModel)
+    public async Task<Result<PerformerModel>> CreateAsync(AddOrUpdatePerformerModel addOrUpdatePerformerModel)
     {
-        var performer = createPerformerModel.Adapt<Performer>();
+        var performer = addOrUpdatePerformerModel.Adapt<Performer>();
         var createdPerformer = await _performerRepository.CreateAsync(performer);
         return Result.Ok(createdPerformer.Adapt<PerformerModel>());
+    }
+    
+    public async Task<Result<PerformerModel>> UpdateAsync(Guid id, AddOrUpdatePerformerModel addOrUpdatePerformerModel)
+    {
+        var performer = await _performerRepository.GetAsync(id);
+        if (performer == null)
+        {
+            return Result.Fail<PerformerModel>($"Performer with id {id} not found");
+        }
+        performer = addOrUpdatePerformerModel.Adapt(performer);
+        var updatedPerformer = await _performerRepository.UpdateAsync(id, performer);
+        return Result.Ok(updatedPerformer.Adapt<PerformerModel>());
+    }
+    
+    public async Task<Result> DeleteAsync(Guid id)
+    {
+        var performer = await _performerRepository.GetAsync(id);
+        if (performer == null)
+        {
+            return Result.Fail($"Performer with id {id} not found");
+        }
+        await _performerRepository.DeleteAsync(id);
+        return Result.Ok();
     }
 }

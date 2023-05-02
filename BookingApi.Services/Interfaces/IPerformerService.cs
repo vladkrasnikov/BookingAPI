@@ -9,5 +9,9 @@ public interface IPerformerService
 
     public Task<Result<PerformerModel>> GetAsync(Guid id);
     
-    public Task<Result<PerformerModel>> CreateAsync(CreatePerformerModel createPerformerModel);
+    public Task<Result<PerformerModel>> CreateAsync(AddOrUpdatePerformerModel addOrUpdatePerformerModel);
+    
+    public Task<Result<PerformerModel>> UpdateAsync(Guid id, AddOrUpdatePerformerModel addOrUpdatePerformerModel);
+    
+    public Task<Result> DeleteAsync(Guid id);
 }
