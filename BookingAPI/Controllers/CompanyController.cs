@@ -23,6 +23,7 @@ namespace BookingAPI.Controllers
         /// </summary>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<GetCompanyResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCompanies()
         {
             var result = await _companyService.GetListAsync();
@@ -36,6 +37,7 @@ namespace BookingAPI.Controllers
         [HttpGet("{id}")]
         [SwaggerResponse(StatusCodes.Status200OK, "Company found", typeof(GetCompanyResponse))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Company not found")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCompanies([FromRoute] Guid id)
         {
             var result = await _companyService.GetAsync(id);
@@ -49,9 +51,25 @@ namespace BookingAPI.Controllers
         [HttpPost]
         [SwaggerResponse(StatusCodes.Status200OK, "Company created", typeof(GetCompanyResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid request")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateCompany([FromBody] CreateCompanyRequest request)
         {
-            var result = await _companyService.CreateAsync(request.Adapt<CreateCompanyModel>());
+            var result = await _companyService.CreateAsync(request.Adapt<AddOrUpdateCompanyModel>());
+            var mappedResult = result.Value.Adapt<GetCompanyResponse>();
+            return Ok(mappedResult);
+        }
+        
+        /// <summary>
+        /// Updates a company
+        /// </summary>
+        [HttpPut("{id}")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Company updated", typeof(GetCompanyResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid request")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Company not found")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateCompany([FromRoute] Guid id, [FromBody] AddOrUpdateCompanyModel request)
+        {
+            var result = await _companyService.UpdateAsync(id, request);
             var mappedResult = result.Value.Adapt<GetCompanyResponse>();
             return Ok(mappedResult);
         }

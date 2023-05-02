@@ -7,5 +7,7 @@ public interface ICompanyService
 { 
     Task<Result<List<CompanyModel>>> GetListAsync();
     Task<Result<CompanyModel>> GetAsync(Guid id);
-    Task<Result<CompanyModel>> CreateAsync(CreateCompanyModel createCompanyModel);
+    Task<Result<CompanyModel>> CreateAsync(AddOrUpdateCompanyModel addOrUpdateCompanyModel);
+    Task<Result<CompanyModel>> UpdateAsync(Guid id, AddOrUpdateCompanyModel addOrUpdateCompanyModel);
+    Task<Result> DeleteAsync(Guid id);
 }

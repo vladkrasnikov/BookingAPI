@@ -39,9 +39,9 @@ public class PerformerController : Controller
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<PerformerModel>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetByBrandId(Guid brandId)
+    public async Task<IActionResult> GetByBrandId(Guid id)
     {
-        var result = await _performerService.GetByBrandIdAsync(brandId);
+        var result = await _performerService.GetByBrandIdAsync(id);
         return Ok(result.Value);
     }
 }

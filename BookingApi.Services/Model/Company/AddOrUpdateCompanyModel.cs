@@ -1,6 +1,6 @@
 ﻿namespace BookingApi.Services.Model.Company;
 
-public class CreateCompanyModel
+public class AddOrUpdateCompanyModel
 {
     public Guid UserId { get; set; }
     

@@ -29,14 +29,36 @@ public class CompanyService : ICompanyService
         return result.EntityToModel<Company, CompanyModel>();
     }
 
-    public async Task<Result<CompanyModel>> CreateAsync(CreateCompanyModel createCompanyModel)
+    public async Task<Result<CompanyModel>> CreateAsync(AddOrUpdateCompanyModel addOrUpdateCompanyModel)
     {
-        var companyResult = await _companyRepository.GetAsync(createCompanyModel.Name);
+        var companyResult = await _companyRepository.GetAsync(addOrUpdateCompanyModel.Name);
         if(companyResult.IsSuccess)
         {
             return Result.Fail<CompanyModel>("Company with the same name already exists");
         }
-        var result = await _companyRepository.CreateAsync(createCompanyModel.Adapt<Company>());
+        var result = await _companyRepository.CreateAsync(addOrUpdateCompanyModel.Adapt<Company>());
         return result.EntityToModel<Company, CompanyModel>();
+    }
+    
+    public async Task<Result<CompanyModel>> UpdateAsync(Guid id, AddOrUpdateCompanyModel addOrUpdateCompanyModel)
+    {
+        var companyResult = await _companyRepository.GetAsync(id);
+        if(companyResult.IsFailed)
+        {
+            return companyResult.ToResult<CompanyModel>();
+        }
+        var result = await _companyRepository.UpdateAsync(id, addOrUpdateCompanyModel.Adapt<Company>());
+        return result.EntityToModel<Company, CompanyModel>();
+    }
+    
+    public async Task<Result> DeleteAsync(Guid id)
+    {
+        var companyResult = await _companyRepository.GetAsync(id);
+        if(companyResult.IsFailed)
+        {
+            return companyResult.ToResult();
+        }
+        var result = await _companyRepository.DeleteAsync(id);
+        return result;
     }
 }
