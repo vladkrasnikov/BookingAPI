@@ -14,6 +14,8 @@ public class UserModel
     public string EmailAddress { get; set; }
     
     public string Password { get; set; }
+    
+    public short Role { get; set; }
 
     public bool Blocked { get; set; }
 

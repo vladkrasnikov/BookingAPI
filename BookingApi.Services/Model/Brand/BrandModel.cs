@@ -13,6 +13,8 @@ public class BrandModel
     public string Description { get; set; }
 
     public string Address { get; set; }
+    
+    public string Image { get; set; }
 
     public IEnumerable<PerformerModel> Performer { get; set; }
 }
