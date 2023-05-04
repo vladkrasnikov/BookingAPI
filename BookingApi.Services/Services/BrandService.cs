@@ -27,16 +27,6 @@ public class BrandService : IBrandService
         return brandEntity.Value.Adapt<BrandModel>();
     }
 
-    public async Task<Result<BrandModel>> GetAsync(string brandName)
-    {
-        var brandEntity = await _brandRepository.GetAsync(brandName);
-
-        if (brandEntity.IsFailed)
-            return brandEntity.ToResult();
-        
-        return brandEntity.Value.Adapt<BrandModel>();
-    }
-
     public async Task<Result<IEnumerable<BrandModel>>> GetAsync()
     {
         var brands = await _brandRepository.GetAsync();
@@ -45,7 +35,7 @@ public class BrandService : IBrandService
 
     public async Task<Result<BrandModel>> CreateAsync(AddOrUpdateBrandModel brand)
     {
-        var brandEntity = await GetAsync(brand.Name);
+        var brandEntity = await _brandRepository.GetBrandInCompanyAsync(brand.Adapt<Brand>());
         // Check if brand with the same name already exists, return 400 not 500
         if(brandEntity.IsSuccess)
         {

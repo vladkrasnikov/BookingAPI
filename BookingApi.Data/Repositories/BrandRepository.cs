@@ -32,9 +32,9 @@ public class BrandRepository : IBrandRepository
         return brandEntity;
     }
 
-    public async Task<Result<Brand>> GetAsync(string brandName)
+    public async Task<Result<Brand>> GetBrandInCompanyAsync(Brand brand)
     {
-        var brandEntity = await _context.Brand.FirstOrDefaultAsync(x => x.Name.Equals(brandName));
+        var brandEntity = await _context.Brand.Where(x => x.CompanyId == brand.CompanyId).FirstOrDefaultAsync(x => x.Name.Equals(brand.Name));
         
         if (brandEntity is null)
         {
