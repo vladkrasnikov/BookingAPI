@@ -17,6 +17,8 @@ public partial class Brand
 
     public Guid CompanyId { get; set; }
 
+    public string Image { get; set; }
+
     public virtual Company Company { get; set; }
 
     public virtual ICollection<Performer> Performer { get; } = new List<Performer>();

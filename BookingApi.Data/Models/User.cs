@@ -19,6 +19,8 @@ public partial class User
 
     public string Password { get; set; }
 
+    public short Role { get; set; }
+
     public virtual ICollection<Company> Company { get; } = new List<Company>();
 
     public virtual ICollection<Reservation> Reservation { get; } = new List<Reservation>();
