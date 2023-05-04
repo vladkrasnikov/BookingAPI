@@ -11,6 +11,4 @@ public class CreateReservationModel
     public DateTime EndDate { get; set; }
     
     public string UserEmailAddress { get; set; }
-    
-    public string? Comment { get; set; }
 }

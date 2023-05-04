@@ -35,7 +35,7 @@ public class ReservationController : Controller
         return Ok(result.Value);
     }
     
-    [HttpGet("performer/{id}")]
+    [HttpGet("performer/{performerId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ReservationModel>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
