@@ -85,5 +85,19 @@ namespace BookingAPI.Controllers
         {
             return Ok(await _companyService.DeleteAsync(id));
         }
+        
+        /// <summary>
+        /// Get copanies by user id
+        /// </summary>
+        [HttpGet("user/{userId}")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Companies found", typeof(IEnumerable<GetCompanyResponse>))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Companies not found")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetCompaniesByUserId([FromRoute] Guid userId)
+        {
+            var result = await _companyService.GetByUserIdAsync(userId);
+            var mappedResult = result.Value.Adapt<IEnumerable<GetCompanyResponse>>();
+            return Ok(mappedResult);
+        }
     }
 }

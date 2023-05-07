@@ -75,4 +75,16 @@ public class CompanyRepository : ICompanyRepository
 
         return Result.Ok();
     }
+    
+    public async Task<Result<IEnumerable<Company>>> GetByUserIdAsync(Guid userId)
+    {
+        var companyEntities = await _context.Company.Include(x => x.Brand).Where(x => x.UserId == userId).ToListAsync();
+        
+        if (companyEntities == null)
+        {
+            return Result.Fail<IEnumerable<Company>>("Company not found");
+        }
+        
+        return companyEntities;
+    }
 }

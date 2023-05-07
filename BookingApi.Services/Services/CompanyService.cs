@@ -61,4 +61,10 @@ public class CompanyService : ICompanyService
         var result = await _companyRepository.DeleteAsync(id);
         return result;
     }
+    
+    public async Task<Result<List<CompanyModel>>> GetByUserIdAsync(Guid userId)
+    {
+        var result = await _companyRepository.GetByUserIdAsync(userId);
+        return result.EntityToModel<IEnumerable<Company>, List<CompanyModel>>();
+    }
 }
