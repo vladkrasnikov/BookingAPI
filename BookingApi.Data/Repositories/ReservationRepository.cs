@@ -38,4 +38,9 @@ public class ReservationRepository : IReservationRepository
     {
         return await _context.Reservation.Where(x => x.UserId == userId).ToListAsync();
     }
+    
+    public async Task<IEnumerable<Reservation>> GetByBrandIdAsync(Guid brandId)
+    {
+        return await _context.Reservation.Include(x => x.Performer).Where(x => x.Performer.BrandId == brandId).ToListAsync();
+    }
 }

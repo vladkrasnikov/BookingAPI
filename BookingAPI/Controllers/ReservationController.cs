@@ -55,13 +55,13 @@ public class ReservationController : Controller
         return Ok(result.Value);
     }
     
-    // [HttpGet("brand/{id}")]
-    // [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ReservationModel>))]
-    // [ProducesResponseType(StatusCodes.Status404NotFound)]
-    // [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    // public async Task<IActionResult> GetByBrandId(Guid brandId)
-    // {
-    //     var result = await _reservationService.GetByBrandIdAsync(brandId);
-    //     return Ok(result.Value);
-    // }
+    [HttpGet("brand/{brandId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ReservationModel>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetByBrandId(Guid brandId)
+    {
+        var result = await _reservationService.GetByBrandIdAsync(brandId);
+        return Ok(result.Value);
+    }
 }
