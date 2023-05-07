@@ -9,4 +9,6 @@ public interface IReservationRepository
     public Task<Reservation> GetAsync(Guid id);
     
     public Task<IEnumerable<Reservation>> GetByPerformerIdAsync(Guid performerId);
+    
+    public Task<IEnumerable<Reservation>> GetByUserIdAsync(Guid userId);
 }

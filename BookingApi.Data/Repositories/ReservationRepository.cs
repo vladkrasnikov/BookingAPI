@@ -33,4 +33,9 @@ public class ReservationRepository : IReservationRepository
     {
         return await _context.Reservation.Where(x => x.PerformerId == performerId).ToListAsync();
     }
+    
+    public async Task<IEnumerable<Reservation>> GetByUserIdAsync(Guid userId)
+    {
+        return await _context.Reservation.Where(x => x.UserId == userId).ToListAsync();
+    }
 }

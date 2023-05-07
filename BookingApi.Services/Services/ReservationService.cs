@@ -62,4 +62,15 @@ public class ReservationService : IReservationService
 
         return Result.Ok(reservations.Adapt<List<ReservationModel>>());
     }
+    
+    public async Task<Result<List<ReservationModel>>> GetByUserIdAsync(Guid userId)
+    {
+        var reservations = await _reservationRepository.GetByUserIdAsync(userId);
+        if (reservations == null)
+        {
+            return Result.Fail<List<ReservationModel>>("Reservations not found");
+        }
+
+        return Result.Ok(reservations.Adapt<List<ReservationModel>>());
+    }
 }
