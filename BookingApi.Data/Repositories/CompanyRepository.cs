@@ -16,7 +16,7 @@ public class CompanyRepository : ICompanyRepository
     }
     public async Task<Result<IEnumerable<Company>>> GetListAsync()
     {
-        return await _context.Company.ToListAsync();
+        return await _context.Company.Include(x => x.Brand).ThenInclude(x =>x.Performer).ThenInclude(x => x.Reservation).ToListAsync();
     }
 
     public async Task<Result<Company>> GetAsync(Guid id)
