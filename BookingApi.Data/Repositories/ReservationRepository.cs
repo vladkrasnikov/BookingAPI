@@ -36,12 +36,17 @@ public class ReservationRepository : IReservationRepository
     
     public async Task<IEnumerable<Reservation>> GetByUserIdAsync(Guid userId)
     {
-        return await _context.Reservation.Where(x => x.UserId == userId).ToListAsync();
+        return await _context.Reservation.Include(x => x.Performer).ThenInclude(x => x.Brand).Where(x => x.UserId == userId).ToListAsync();
     }
     
     public async Task<IEnumerable<Reservation>> GetByBrandIdAsync(Guid brandId)
     {
         return await _context.Reservation.Include(x => x.Performer).Where(x => x.Performer.BrandId == brandId).ToListAsync();
+    }
+    
+    public async Task<IEnumerable<Reservation>> GetByCompanyIdAsync(Guid userId)
+    {
+        return await _context.Reservation.Include(x => x.Performer).ThenInclude(x => x.Brand).ThenInclude(x => x.Company).Where(x => x.Performer.Brand.Company.UserId == userId).ToListAsync();
     }
     
     public async Task<Reservation> UpdateAsync(Reservation reservation)

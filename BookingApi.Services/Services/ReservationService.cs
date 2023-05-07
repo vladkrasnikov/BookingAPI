@@ -71,13 +71,38 @@ public class ReservationService : IReservationService
         {
             return Result.Fail<List<ReservationModel>>("Reservations not found");
         }
+        
+        var reservationModels = reservations.Adapt<List<ReservationModel>>();
+        
+        foreach (var reservationModel in reservationModels)
+        {
+            reservationModel.BrandName =
+                reservations.FirstOrDefault(x => x.Id == reservationModel.Id).Performer.Brand.Name;
 
-        return Result.Ok(reservations.Adapt<List<ReservationModel>>());
+        }
+
+        return Result.Ok(reservationModels);
     }
 
     public async Task<Result<List<ReservationModel>>> GetByBrandIdAsync(Guid brandId)
     {
         var reservations = await _reservationRepository.GetByBrandIdAsync(brandId);
+        if (reservations == null)
+        {
+            return Result.Fail<List<ReservationModel>>("Reservations not found");
+        }
+
+        return Result.Ok(reservations.Adapt<List<ReservationModel>>());
+    }
+    
+    public async Task<Result<List<ReservationModel>>> GetAllReservationsOfCompaniesByUserIdAsync(Guid userId)
+    {
+        var user = await _userRepository.GetAsync(userId);
+        if (user == null)
+        {
+            return Result.Fail<List<ReservationModel>>("User not found");
+        }
+        var reservations = await _reservationRepository.GetByCompanyIdAsync(userId);
         if (reservations == null)
         {
             return Result.Fail<List<ReservationModel>>("Reservations not found");

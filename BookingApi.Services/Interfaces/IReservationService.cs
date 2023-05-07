@@ -15,6 +15,8 @@ public interface IReservationService
     
     public Task<Result<List<ReservationModel>>> GetByBrandIdAsync(Guid brandId);
     
+    public Task<Result<List<ReservationModel>>> GetAllReservationsOfCompaniesByUserIdAsync(Guid userId);
+    
     public Task<Result<ReservationModel>> UpdateAsync(Guid id, AddOrUpdateReservationModel addOrUpdateReservationModel);
     
     public Task<Result> DeleteAsync(Guid id);
