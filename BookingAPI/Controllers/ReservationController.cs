@@ -19,9 +19,9 @@ public class ReservationController : Controller
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ReservationModel))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Create(CreateReservationModel createReservationRequest)
+    public async Task<IActionResult> Create(AddOrUpdateReservationModel addOrUpdateReservationRequest)
     {
-        var result = await _reservationService.CreateAsync(createReservationRequest);
+        var result = await _reservationService.CreateAsync(addOrUpdateReservationRequest);
         return Ok(result.Value);
     }
 

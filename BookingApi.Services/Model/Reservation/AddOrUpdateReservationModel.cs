@@ -1,6 +1,6 @@
 ﻿namespace BookingApi.Services.Model.Reservation;
 
-public class CreateReservationModel
+public class AddOrUpdateReservationModel
 {
     public Guid PerformerId { get; set; }
     

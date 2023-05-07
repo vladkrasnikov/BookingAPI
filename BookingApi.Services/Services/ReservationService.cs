@@ -13,28 +13,29 @@ public class ReservationService : IReservationService
     private readonly IPerformerRepository _performerRepository;
     private readonly IUserRepository _userRepository;
 
-    public ReservationService(IReservationRepository reservationRepository, IPerformerRepository performerRepository, IUserRepository userRepository)
+    public ReservationService(IReservationRepository reservationRepository, IPerformerRepository performerRepository,
+        IUserRepository userRepository)
     {
         _reservationRepository = reservationRepository;
         _performerRepository = performerRepository;
         _userRepository = userRepository;
     }
 
-    public async Task<Result<ReservationModel>> CreateAsync(CreateReservationModel createReservationModel)
+    public async Task<Result<ReservationModel>> CreateAsync(AddOrUpdateReservationModel addOrUpdateReservationModel)
     {
-        var performer = await _performerRepository.GetAsync(createReservationModel.PerformerId);
+        var performer = await _performerRepository.GetAsync(addOrUpdateReservationModel.PerformerId);
         if (performer == null)
         {
             return Result.Fail<ReservationModel>("Performer not found");
         }
 
-        var user = await _userRepository.GetAsync(createReservationModel.UserId);
+        var user = await _userRepository.GetAsync(addOrUpdateReservationModel.UserId);
         if (user == null)
         {
             return Result.Fail<ReservationModel>("User not found");
         }
 
-        var reservation = createReservationModel.Adapt<Reservation>();
+        var reservation = addOrUpdateReservationModel.Adapt<Reservation>();
 
         var createdReservation = await _reservationRepository.CreateAsync(reservation);
 
@@ -62,7 +63,7 @@ public class ReservationService : IReservationService
 
         return Result.Ok(reservations.Adapt<List<ReservationModel>>());
     }
-    
+
     public async Task<Result<List<ReservationModel>>> GetByUserIdAsync(Guid userId)
     {
         var reservations = await _reservationRepository.GetByUserIdAsync(userId);
@@ -73,7 +74,7 @@ public class ReservationService : IReservationService
 
         return Result.Ok(reservations.Adapt<List<ReservationModel>>());
     }
-    
+
     public async Task<Result<List<ReservationModel>>> GetByBrandIdAsync(Guid brandId)
     {
         var reservations = await _reservationRepository.GetByBrandIdAsync(brandId);
@@ -83,5 +84,46 @@ public class ReservationService : IReservationService
         }
 
         return Result.Ok(reservations.Adapt<List<ReservationModel>>());
+    }
+
+    public async Task<Result<ReservationModel>> UpdateAsync(Guid id,
+        AddOrUpdateReservationModel addOrUpdateReservationModel)
+    {
+        var reservation = await _reservationRepository.GetAsync(id);
+        if (reservation == null)
+        {
+            return Result.Fail<ReservationModel>("Reservation not found");
+        }
+
+        var performer = await _performerRepository.GetAsync(addOrUpdateReservationModel.PerformerId);
+        if (performer == null)
+        {
+            return Result.Fail<ReservationModel>("Performer not found");
+        }
+
+        var user = await _userRepository.GetAsync(addOrUpdateReservationModel.UserId);
+        if (user == null)
+        {
+            return Result.Fail<ReservationModel>("User not found");
+        }
+
+        reservation = addOrUpdateReservationModel.Adapt(reservation);
+
+        var updatedReservation = await _reservationRepository.UpdateAsync(reservation);
+
+        return Result.Ok(updatedReservation.Adapt<ReservationModel>());
+    }
+
+    public async Task<Result> DeleteAsync(Guid id)
+    {
+        var reservation = await _reservationRepository.GetAsync(id);
+        if (reservation == null)
+        {
+            return Result.Fail("Reservation not found");
+        }
+
+        await _reservationRepository.DeleteAsync(id);
+
+        return Result.Ok();
     }
 }

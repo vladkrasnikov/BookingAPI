@@ -43,4 +43,23 @@ public class ReservationRepository : IReservationRepository
     {
         return await _context.Reservation.Include(x => x.Performer).Where(x => x.Performer.BrandId == brandId).ToListAsync();
     }
+    
+    public async Task<Reservation> UpdateAsync(Reservation reservation)
+    {
+        _context.Reservation.Update(reservation);
+        await _context.SaveChangesAsync();
+        
+        return reservation;
+    }
+    
+    public async Task DeleteAsync(Guid id)
+    {
+        var reservationEntity = await _context.Reservation.FirstOrDefaultAsync(x => x.Id == id);
+        
+        if (reservationEntity != null)
+        {
+            _context.Reservation.Remove(reservationEntity);
+            await _context.SaveChangesAsync();
+        }
+    }
 }
