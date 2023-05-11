@@ -12,5 +12,7 @@ public class GetCompanyResponse
 
     public string Description { get; set; }
     
+    public bool IsOwner { get; set; }
+    
     public IEnumerable<BrandModel> Brand { get; set; }
 }

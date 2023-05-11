@@ -1,14 +1,17 @@
-﻿using BookingAPI.Models.Company;
+﻿using System.Security.Claims;
+using BookingAPI.Models.Company;
 using BookingApi.Services.Interfaces;
 using BookingApi.Services.Model.Company;
 using Microsoft.AspNetCore.Mvc;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace BookingAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CompanyController : Controller
     {
         private readonly ICompanyService _companyService;
@@ -38,10 +41,16 @@ namespace BookingAPI.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, "Company found", typeof(GetCompanyResponse))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Company not found")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetCompanies([FromRoute] Guid id)
+        public async Task<IActionResult> GetCompany([FromRoute] Guid id)
         {
             var result = await _companyService.GetAsync(id);
-            var mappedResult = result.Value.Adapt<GetCompanyResponse>();
+            
+            var resultValue = result.Value;
+            var mappedResult = resultValue.Adapt<GetCompanyResponse>();
+            
+            // Check if user is owner of the company and have rights to add brands etc.
+            if (resultValue.UserId == Guid.Parse(User.FindFirstValue("Id"))) mappedResult.IsOwner = true;
+            
             return Ok(mappedResult);
         }
 

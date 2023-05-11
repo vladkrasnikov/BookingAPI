@@ -1,13 +1,16 @@
-﻿using BookingAPI.Models.Brand;
+﻿using System.Security.Claims;
+using BookingAPI.Models.Brand;
 using BookingApi.Services.Interfaces;
 using BookingApi.Services.Model.Brand;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class BrandController : Controller
 {
     private readonly IBrandService _brandService;
@@ -43,7 +46,8 @@ public class BrandController : Controller
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateBrand([FromBody] AddOrUpdateBrandRequest request)
     {
-        var result = await _brandService.CreateAsync(request.Adapt<AddOrUpdateBrandModel>());
+        var userId = Guid.Parse(User.FindFirstValue("Id"));
+        var result = await _brandService.CreateAsync(userId, request.Adapt<AddOrUpdateBrandModel>());
         var mappedResult = result.Value.Adapt<GetBrandResponse>();
         return Ok(mappedResult);
     }
