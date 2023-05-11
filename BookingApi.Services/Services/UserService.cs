@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using BookingApi.Data.Helpers.Interfaces;
 using BookingApi.Data.Interfaces.Repository;
 using BookingApi.Data.Models;
 using BookingApi.Services.Interfaces;
@@ -14,19 +15,16 @@ namespace BookingApi.Services.Services;
 
 public class UserService : IUserService
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IAuditRepository _auditRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IPasswordHasher<UserModel> _passwordHasher;
 
     public UserService(
-        IUserRepository userRepository,
-        IAuditRepository auditRepository,
+        IUnitOfWork unitOfWork,
         IHttpContextAccessor httpContextAccessor,
         IPasswordHasher<UserModel> passwordHasher)
     {
-        _userRepository = userRepository;
-        _auditRepository = auditRepository; 
+        _unitOfWork = unitOfWork; 
         _httpContextAccessor = httpContextAccessor;
         _passwordHasher = passwordHasher;
     }
@@ -37,8 +35,8 @@ public class UserService : IUserService
         userModel.Password = _passwordHasher.HashPassword(userModel, createUserRequestModel.Password);
 
         var userEntity = userModel.Adapt<User>();
-        await _userRepository.CreateAsync(userEntity);
-        await _auditRepository.CreateAsync($"User created: Id {userModel.Id}, {userModel.EmailAddress}", new Audit(),
+        await _unitOfWork.User.CreateAsync(userEntity);
+        await _unitOfWork.Audit.CreateAsync($"User created: Id {userModel.Id}, {userModel.EmailAddress}", new Audit(),
             userEntity);
 
         return Result.Ok(userModel.Adapt<UserModel>());
@@ -46,7 +44,7 @@ public class UserService : IUserService
 
     public async Task<Result<UserModel>> GetAsync(Guid id)
     {
-        var userResult = await _userRepository.GetAsync(id);
+        var userResult = await _unitOfWork.User.GetAsync(id);
         if (userResult.IsFailed)
             return Result.Fail<UserModel>($"User with id {id} not found");
 
@@ -55,7 +53,7 @@ public class UserService : IUserService
 
     public async Task<Result> SignIn(SignInRequestModel signInRequestModel)
     {
-        var userResult = await _userRepository.GetAsync(signInRequestModel.EmailAddress);
+        var userResult = await _unitOfWork.User.GetAsync(signInRequestModel.EmailAddress);
 
         if (userResult.IsFailed)
             return Result.Fail($"User with email address {signInRequestModel.EmailAddress} not found");
@@ -99,7 +97,7 @@ public class UserService : IUserService
 
     public async Task<PasswordVerificationResult> VerifyUserAsync(string emailAddress, string password)
     {
-        var userResult = await _userRepository.GetAsync(emailAddress);
+        var userResult = await _unitOfWork.User.GetAsync(emailAddress);
         if (userResult.IsFailed)
             return PasswordVerificationResult.Failed;
 

@@ -1,4 +1,4 @@
-﻿using BookingApi.Data.Interfaces.Repository;
+﻿using BookingApi.Data.Helpers.Interfaces;
 using BookingApi.Data.Models;
 using BookingApi.Services.Interfaces;
 using BookingApi.Services.Model.Brand;
@@ -10,18 +10,16 @@ namespace BookingApi.Services.Services;
 
 public class BrandService : IBrandService
 {
-    private readonly IBrandRepository _brandRepository;
-    private readonly ICompanyRepository _companyRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public BrandService(IBrandRepository brandRepository, ICompanyRepository companyRepository)
+    public BrandService(IUnitOfWork unitOfWork)
     {
-        _brandRepository = brandRepository;
-        _companyRepository = companyRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<BrandModel>> GetAsync(Guid brandId)
     {
-        var brandEntity = await _brandRepository.GetAsync(brandId);
+        var brandEntity = await _unitOfWork.Brand.GetAsync(brandId);
         
         if (brandEntity.IsFailed)
             return brandEntity.ToResult();
@@ -31,20 +29,20 @@ public class BrandService : IBrandService
 
     public async Task<Result<IEnumerable<BrandModel>>> GetAsync()
     {
-        var brands = await _brandRepository.GetAsync();
+        var brands = await _unitOfWork.Brand.GetAsync();
         return brands.EntityToModel<IEnumerable<Brand>, IEnumerable<BrandModel>>();
     }
 
     public async Task<Result<BrandModel>> CreateAsync(Guid userId, AddOrUpdateBrandModel brand)
     {
-        var brandEntity = await _brandRepository.GetBrandInCompanyAsync(brand.Adapt<Brand>());
+        var brandEntity = await _unitOfWork.Brand.GetBrandInCompanyAsync(brand.Adapt<Brand>());
         // Check if brand with the same name already exists, return 400 not 500
         if(brandEntity.IsSuccess)
         {
             return Result.Fail("Brand with the same name already exists in this company");
         }
         
-        var company = await _companyRepository.GetAsync(brand.CompanyId);
+        var company = await _unitOfWork.Company.GetAsync(brand.CompanyId);
         if(company.IsFailed)
         {
             return company.ToResult();
@@ -56,26 +54,26 @@ public class BrandService : IBrandService
             return Result.Fail("User is not authorized to create brand in this company");
         }
         
-        var brandResult = await _brandRepository.CreateAsync(brand.Adapt<Brand>());
+        var brandResult = await _unitOfWork.Brand.CreateAsync(brand.Adapt<Brand>());
         return brandResult.Value.Adapt<BrandModel>();
     }
 
     public async Task<Result<BrandModel>> UpdateAsync(Guid id, AddOrUpdateBrandModel brand)
     {
-        var brandEntity = await _brandRepository.GetAsync(id);
+        var brandEntity = await _unitOfWork.Brand.GetAsync(id);
         if (brandEntity.IsFailed)
             return brandEntity.ToResult();
         
-        var brandResult = await _brandRepository.UpdateAsync(brand.Adapt<Brand>());
+        var brandResult = await _unitOfWork.Brand.UpdateAsync(brand.Adapt<Brand>());
         return brandResult.Value.Adapt<BrandModel>();
     }
 
     public async Task<Result> DeleteAsync(Guid brandId)
     {
-        var brandEntity = await _brandRepository.GetAsync(brandId);
+        var brandEntity = await _unitOfWork.Brand.GetAsync(brandId);
         if (brandEntity.IsFailed)
             return brandEntity.ToResult();
         
-        return await _brandRepository.DeleteAsync(brandId);
+        return await _unitOfWork.Brand.DeleteAsync(brandId);
     }
 }

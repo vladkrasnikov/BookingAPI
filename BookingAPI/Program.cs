@@ -1,4 +1,6 @@
 using BookingApi.Data.Data;
+using BookingApi.Data.Helpers;
+using BookingApi.Data.Helpers.Interfaces;
 using BookingApi.Data.Interfaces.Repository;
 using BookingApi.Data.Repositories;
 using BookingApi.Services.Interfaces;
@@ -19,12 +21,10 @@ builder.Services.AddDbContext<ReservationContext>(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(myAllowSpecificOrigins,
-        policy =>
-        {
-            policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-        });
+        policy => { policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
 });
 
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
