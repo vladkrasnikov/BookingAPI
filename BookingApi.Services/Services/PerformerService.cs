@@ -1,5 +1,4 @@
 ﻿using BookingApi.Data.Helpers.Interfaces;
-using BookingApi.Data.Interfaces.Repository;
 using BookingApi.Data.Models;
 using BookingApi.Services.Interfaces;
 using BookingApi.Services.Model.Performer;
