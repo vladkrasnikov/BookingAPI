@@ -112,7 +112,7 @@ public class ReservationService : IReservationService
 
         }
 
-        return Result.Ok(reservations.Adapt<List<ReservationModel>>());
+        return Result.Ok(reservationModels);
     }
 
     public async Task<Result<ReservationModel>> UpdateAsync(Guid id, AddOrUpdateReservationModel addOrUpdateReservationModel)
