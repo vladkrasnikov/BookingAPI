@@ -102,6 +102,15 @@ public class ReservationService : IReservationService
         {
             return Result.Fail<List<ReservationModel>>("Reservations not found");
         }
+        
+        var reservationModels = reservations.Adapt<List<ReservationModel>>();
+        
+        foreach (var reservationModel in reservationModels)
+        {
+            reservationModel.BrandName =
+                reservations.FirstOrDefault(x => x.Id == reservationModel.Id).Performer.Brand.Name;
+
+        }
 
         return Result.Ok(reservations.Adapt<List<ReservationModel>>());
     }
