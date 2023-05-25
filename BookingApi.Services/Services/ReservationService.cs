@@ -169,21 +169,8 @@ public class ReservationService : IReservationService
 
     private bool IsOverlapping(Reservation newReservation, IEnumerable<Reservation> existingReservations)
     {
-        foreach (var existingReservation in existingReservations)
-        {
-            if (newReservation.StartDate > existingReservation.StartDate &&
-                newReservation.StartDate < existingReservation.EndDate)
-            {
-                return true;
-            }
-
-            if (newReservation.StartDate < existingReservation.StartDate &&
-                newReservation.EndDate > existingReservation.StartDate)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return existingReservations.Any(existingReservation =>
+            (newReservation.StartDate > existingReservation.StartDate && newReservation.StartDate < existingReservation.EndDate) ||
+            (newReservation.StartDate < existingReservation.StartDate && newReservation.EndDate > existingReservation.StartDate));
     }
 }
