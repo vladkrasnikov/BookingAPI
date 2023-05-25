@@ -32,6 +32,12 @@ public class ReservationService : IReservationService
 
         var reservation = addOrUpdateReservationModel.Adapt<Reservation>();
 
+        var overlapping = IsOverlapping(reservation, performer.Reservation);
+        if (overlapping)
+        {
+            return Result.Fail("Reservation is overlapping another reservation time");
+        }
+
         var createdReservation = await _unitOfWork.Reservation.CreateAsync(reservation);
 
         return Result.Ok(createdReservation.Adapt<ReservationModel>());
@@ -66,14 +72,13 @@ public class ReservationService : IReservationService
         {
             return Result.Fail<List<ReservationModel>>("Reservations not found");
         }
-        
+
         var reservationModels = reservations.Adapt<List<ReservationModel>>();
-        
+
         foreach (var reservationModel in reservationModels)
         {
             reservationModel.BrandName =
                 reservations.FirstOrDefault(x => x.Id == reservationModel.Id).Performer.Brand.Name;
-
         }
 
         return Result.Ok(reservationModels);
@@ -89,7 +94,7 @@ public class ReservationService : IReservationService
 
         return Result.Ok(reservations.Adapt<List<ReservationModel>>());
     }
-    
+
     public async Task<Result<List<ReservationModel>>> GetAllReservationsOfCompaniesByUserIdAsync(Guid userId)
     {
         var user = await _unitOfWork.User.GetAsync(userId);
@@ -97,28 +102,29 @@ public class ReservationService : IReservationService
         {
             return Result.Fail<List<ReservationModel>>("User not found");
         }
+
         var reservations = await _unitOfWork.Reservation.GetByCompanyIdAsync(userId);
         if (reservations == null)
         {
             return Result.Fail<List<ReservationModel>>("Reservations not found");
         }
-        
+
         var reservationModels = reservations.Adapt<List<ReservationModel>>();
-        
+
         foreach (var reservationModel in reservationModels)
         {
             reservationModel.BrandName =
                 reservations.FirstOrDefault(x => x.Id == reservationModel.Id).Performer.Brand.Name;
-
         }
 
         return Result.Ok(reservationModels);
     }
 
-    public async Task<Result<ReservationModel>> UpdateAsync(Guid id, AddOrUpdateReservationModel addOrUpdateReservationModel)
+    public async Task<Result<ReservationModel>> UpdateAsync(Guid id,
+        AddOrUpdateReservationModel addOrUpdateReservationModel)
     {
-        var reservation = await _unitOfWork.Reservation.GetAsync(id);
-        if (reservation == null)
+        var reservationResult = await _unitOfWork.Reservation.GetAsync(id);
+        if (reservationResult == null)
         {
             return Result.Fail<ReservationModel>("Reservation not found");
         }
@@ -135,7 +141,13 @@ public class ReservationService : IReservationService
             return Result.Fail<ReservationModel>("User not found");
         }
 
-        reservation = addOrUpdateReservationModel.Adapt(reservation);
+        var reservation = addOrUpdateReservationModel.Adapt(reservationResult);
+
+        var overlapping = IsOverlapping(reservation, performer.Reservation);
+        if (overlapping)
+        {
+            return Result.Fail<ReservationModel>("Reservation is overlapping another reservation time");
+        }
 
         var updatedReservation = await _unitOfWork.Reservation.UpdateAsync(reservation);
 
@@ -153,5 +165,25 @@ public class ReservationService : IReservationService
         await _unitOfWork.Reservation.DeleteAsync(id);
 
         return Result.Ok();
+    }
+
+    private bool IsOverlapping(Reservation newReservation, IEnumerable<Reservation> existingReservations)
+    {
+        foreach (var existingReservation in existingReservations)
+        {
+            if (newReservation.StartDate > existingReservation.StartDate &&
+                newReservation.StartDate < existingReservation.EndDate)
+            {
+                return true;
+            }
+
+            if (newReservation.StartDate < existingReservation.StartDate &&
+                newReservation.EndDate > existingReservation.StartDate)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

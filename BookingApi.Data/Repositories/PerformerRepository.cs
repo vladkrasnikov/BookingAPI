@@ -16,7 +16,7 @@ public class PerformerRepository : IPerformerRepository
 
     public async Task<Performer> GetAsync(Guid id)
     {
-        return await _context.Performer.FirstOrDefaultAsync(x => x.Id == id);
+        return await _context.Performer.Include(x => x.Reservation).FirstOrDefaultAsync(x => x.Id == id);
     }
     
     public async Task<IEnumerable<Performer>> GetByBrandIdAsync(Guid brandId)

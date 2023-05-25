@@ -17,5 +17,5 @@ public class PerformerModel
     [System.Text.Json.Serialization.JsonIgnore]
     public Guid BrandId { get; set; }
 
-    public IEnumerable<ReservationModel> Reservations { get; set; }
+    public IEnumerable<ReservationModel> Reservation { get; set; }
 }

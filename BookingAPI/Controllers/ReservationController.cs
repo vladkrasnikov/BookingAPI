@@ -1,5 +1,6 @@
 ﻿using BookingApi.Services.Interfaces;
 using BookingApi.Services.Model.Reservation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingAPI.Controllers;
