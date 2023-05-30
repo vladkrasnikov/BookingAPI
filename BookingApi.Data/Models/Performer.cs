@@ -19,6 +19,8 @@ public partial class Performer
 
     public short WorkingHourEnd { get; set; }
 
+    public short Rating { get; set; }
+
     public virtual Brand Brand { get; set; }
 
     public virtual ICollection<Reservation> Reservation { get; } = new List<Reservation>();

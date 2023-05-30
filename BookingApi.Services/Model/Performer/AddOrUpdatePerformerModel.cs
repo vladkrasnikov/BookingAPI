@@ -10,5 +10,7 @@ public class AddOrUpdatePerformerModel
 
     public short WorkingHourEnd { get; set; }
 
+    public short Rating { get; set; }
+
     public Guid BrandId { get; set; }
 }

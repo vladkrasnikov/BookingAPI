@@ -21,7 +21,13 @@ builder.Services.AddDbContext<ReservationContext>(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(myAllowSpecificOrigins,
-        policy => { policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+                 .AllowAnyHeader()
+                 .AllowAnyMethod()
+                 .AllowCredentials();
+        });
 });
 
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();

@@ -14,6 +14,8 @@ public class PerformerModel
     
     public short WorkingHourEnd { get; set; }
 
+    public short Rating { get; set; }
+
     [System.Text.Json.Serialization.JsonIgnore]
     public Guid BrandId { get; set; }
 
