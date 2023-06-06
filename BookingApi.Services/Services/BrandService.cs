@@ -35,17 +35,17 @@ public class BrandService : IBrandService
 
     public async Task<Result<BrandModel>> CreateAsync(Guid userId, AddOrUpdateBrandModel brand)
     {
+        var company = await _unitOfWork.Company.GetAsync(brand.CompanyId);
+        if(company.IsFailed)
+        {
+            return company.ToResult();
+        }
+        
         var brandEntity = await _unitOfWork.Brand.GetBrandInCompanyAsync(brand.Adapt<Brand>());
         // Check if brand with the same name already exists, return 400 not 500
         if(brandEntity.IsSuccess)
         {
             return Result.Fail("Brand with the same name already exists in this company");
-        }
-        
-        var company = await _unitOfWork.Company.GetAsync(brand.CompanyId);
-        if(company.IsFailed)
-        {
-            return company.ToResult();
         }
 
         //check if user is owner of company to create brand in this company

@@ -16,12 +16,17 @@ public class CompanyRepository : ICompanyRepository
     }
     public async Task<Result<IEnumerable<Company>>> GetListAsync()
     {
-        return await _context.Company.Include(x => x.Brand).ThenInclude(x =>x.Performer).ThenInclude(x => x.Reservation).ToListAsync();
+        return await _context.Company.Include(x => x.Brand)
+            .ThenInclude(x =>x.Performer)
+            .ThenInclude(x => x.Reservation)
+            .ToListAsync();
     }
 
     public async Task<Result<Company>> GetAsync(Guid id)
     {
-        var companyEntity = await _context.Company.Include(x => x.Brand).FirstOrDefaultAsync(x => x.Id == id);
+        var companyEntity = await _context.Company
+            .Include(x => x.Brand)
+            .FirstOrDefaultAsync(x => x.Id == id);
         
         if (companyEntity == null)
         {
