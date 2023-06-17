@@ -12,7 +12,7 @@ public class ReservationModel
     public DateTime EndDate { get; set; }
 
     public Guid PerformerId { get; set; }
-    
+
     public string BrandName { get; set; }
 
     [System.Text.Json.Serialization.JsonIgnore]
