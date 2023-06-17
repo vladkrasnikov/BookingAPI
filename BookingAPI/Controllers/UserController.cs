@@ -57,4 +57,14 @@ public class UserController : Controller
         var result = await _userService.GetAsync(id);
         return Ok(result.Value.Adapt<GetUserResponse>());
     }
+    
+    [HttpPut]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserModel))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Update(UpdateUserRequest updateUserRequest)
+    {
+        var result = await _userService.UpdateAsync(updateUserRequest.Adapt<UpdateUserRequestModel>());
+        return Ok(result.Value);
+    }
 }

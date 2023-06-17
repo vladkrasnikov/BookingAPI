@@ -38,7 +38,9 @@ public class UserService : IUserService
         await _unitOfWork.Audit.CreateAsync($"User created: Id {userModel.Id}, {userModel.EmailAddress}", new Audit(),
             userEntity);
 
-        return Result.Ok(userModel.Adapt<UserModel>());
+        await _unitOfWork.SaveAsync();
+
+        return Result.Ok(userEntity.Adapt<UserModel>());
     }
 
     public async Task<Result<UserModel>> GetAsync(Guid id)
@@ -71,7 +73,7 @@ public class UserService : IUserService
             new(ClaimTypes.UserData, signInRequestModel.EmailAddress),
             new(ClaimTypes.Name, user.FirstName),
             new Claim(ClaimTypes.Expired, user.Blocked.ToString()),
-            new(ClaimTypes.Role, "User")
+            new(ClaimTypes.Role, user.Role.ToString())
         };
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -103,5 +105,26 @@ public class UserService : IUserService
         var userModel = userResult.Value.Adapt<UserModel>();
         var verificationResult = _passwordHasher.VerifyHashedPassword(userModel, userModel.Password, password);
         return verificationResult;
+    }
+
+    public async Task<Result<UserModel>> UpdateAsync(UpdateUserRequestModel updateUserRequestModel)
+    {
+        var userResult = await _unitOfWork.User.GetAsync(updateUserRequestModel.Id);
+        if (userResult.IsFailed)
+            return Result.Fail($"User with id {updateUserRequestModel.Id} not found");
+        
+        var user = userResult.Value;
+        user.FirstName = updateUserRequestModel.FirstName ?? user.FirstName;
+        user.LastName = updateUserRequestModel.LastName ?? user.LastName;
+        user.Image = updateUserRequestModel.Image ?? user.Image;
+        
+        _unitOfWork.User.UpdateAsync(user);
+        
+        await _unitOfWork.Audit.CreateAsync($"User updated: Id {user.Id}, {user.EmailAddress}", new Audit(),
+            user);
+        
+        await _unitOfWork.SaveAsync();
+        
+        return Result.Ok(user.Adapt<UserModel>());
     }
 }

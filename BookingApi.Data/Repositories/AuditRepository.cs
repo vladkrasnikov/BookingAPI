@@ -20,6 +20,5 @@ public class AuditRepository : IAuditRepository
         audit.By = userEntity.EmailAddress;
         audit.EntityId = userEntity.Id;
         await _context.AddAsync(audit);
-        await _context.SaveChangesAsync();
     }
 }

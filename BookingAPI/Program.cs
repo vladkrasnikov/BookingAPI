@@ -1,3 +1,4 @@
+using System.Reflection;
 using BookingApi.Data.Data;
 using BookingApi.Data.Helpers;
 using BookingApi.Data.Helpers.Interfaces;
@@ -8,6 +9,7 @@ using BookingApi.Services.Model.User;
 using BookingApi.Services.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 
 const string myAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -48,7 +50,8 @@ builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
 
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

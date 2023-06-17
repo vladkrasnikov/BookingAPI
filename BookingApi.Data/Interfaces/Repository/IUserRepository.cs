@@ -8,4 +8,5 @@ public interface IUserRepository
     public Task CreateAsync(User userModel);
     public Task<Result<User>> GetAsync(string emailAddress);
     public Task<Result<User>> GetAsync(Guid id);
+    public Result<User> UpdateAsync(User userModel);
 }

@@ -11,4 +11,5 @@ public interface IUserService
     public Task<Result<UserModel>> GetAsync(Guid id);
     public Task<Result> SignIn(SignInRequestModel signInRequestModel);
     public Task<PasswordVerificationResult> VerifyUserAsync(string emailAddress, string password);
+    public Task<Result<UserModel>> UpdateAsync(UpdateUserRequestModel updateUserRequestModel);
 }

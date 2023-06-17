@@ -20,7 +20,6 @@ public class UserRepository : IUserRepository
         userEntity.Id = Guid.NewGuid();
 
         await _context.User.AddAsync(userEntity);
-        await _context.SaveChangesAsync();
     }
 
     public async Task<Result<User>> GetAsync(string emailAddress)
@@ -31,5 +30,12 @@ public class UserRepository : IUserRepository
     public async Task<Result<User>> GetAsync(Guid id)
     {
         return await _context.User.Include(x => x.Company).Include(x => x.Reservation).FirstOrDefaultAsync(x => x.Id == id);
+    }
+    
+    public Result<User> UpdateAsync(User userEntity)
+    {
+        _context.User.Update(userEntity);
+
+        return userEntity;
     }
 }
