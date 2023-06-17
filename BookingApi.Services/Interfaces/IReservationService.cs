@@ -8,7 +8,7 @@ public interface IReservationService
     public Task<Result<ReservationModel>> CreateAsync(AddOrUpdateReservationModel addOrUpdateReservationModel);
     
     public Task<Result<ReservationModel>> GetAsync(Guid id);
-    
+
     public Task<Result<List<ReservationModel>>> GetByPerformerIdAsync(Guid performerId);
     
     public Task<Result<List<ReservationModel>>> GetByUserIdAsync(Guid userId);

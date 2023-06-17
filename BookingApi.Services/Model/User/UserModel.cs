@@ -17,6 +17,8 @@ public class UserModel
     
     public short Role { get; set; }
 
+    public string Image { get; set; }
+
     public bool Blocked { get; set; }
 
     public IEnumerable<CompanyModel> Companies { get; set; }
