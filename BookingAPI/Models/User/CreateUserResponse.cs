@@ -14,5 +14,6 @@ public class CreateUserResponse
     
     public short Role { get; set; }
 
+    public string Image { get; set; }
     public bool Blocked { get; set; }
 }

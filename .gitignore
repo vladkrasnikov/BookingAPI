@@ -6,7 +6,6 @@ project.lock.json
 nupkg/
 
 # Visual Studio Code
-.vscode
 
 # Rider
 .idea
@@ -17,6 +16,7 @@ nupkg/
 *.userosscache
 *.sln.docstates
 
+temp_auto_push.bat
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -34,4 +34,5 @@ msbuild.err
 msbuild.wrn
 
 # Visual Studio 2015
-.vs/
+.vs/.gitignore
+branch_structure.json

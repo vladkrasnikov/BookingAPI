@@ -34,7 +34,17 @@ public class ReservationController : Controller
         var result = await _reservationService.GetAsync(id);
         return Ok(result.Value);
     }
-    
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReservationModel))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        await _reservationService.DeleteAsync(id);
+        return Ok();
+    }
+
     [HttpGet("performer/{performerId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ReservationModel>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
