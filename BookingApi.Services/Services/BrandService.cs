@@ -5,6 +5,7 @@ using BookingApi.Services.Model.Brand;
 using BookingApi.Services.Extensions;
 using FluentResults;
 using Mapster;
+using SixLabors.ImageSharp.Formats.Png;
 
 namespace BookingApi.Services.Services;
 
@@ -54,6 +55,9 @@ public class BrandService : IBrandService
             return Result.Fail("User is not authorized to create brand in this company");
         }
         
+        if(!String.IsNullOrEmpty(brand.Image))
+            brand.Image = ResizeImageTo1080pAndConvertToBase64(brand.Image);
+        
         var brandResult = await _unitOfWork.Brand.CreateAsync(brand.Adapt<Brand>());
         return brandResult.Value.Adapt<BrandModel>();
     }
@@ -63,9 +67,18 @@ public class BrandService : IBrandService
         var brandEntity = await _unitOfWork.Brand.GetAsync(id);
         if (brandEntity.IsFailed)
             return brandEntity.ToResult();
+
+        if(!String.IsNullOrEmpty(brand.Image))
+            brand.Image = ResizeImageTo1080pAndConvertToBase64(brand.Image);
         
-        var brandResult = await _unitOfWork.Brand.UpdateAsync(brand.Adapt<Brand>());
-        return brandResult.Value.Adapt<BrandModel>();
+        var mappedBrand = brand.Adapt<Brand>();
+        mappedBrand.Id = id;
+        
+        var result = _unitOfWork.Brand.UpdateAsync(mappedBrand);
+
+        await _unitOfWork.SaveAsync();
+        
+        return result.Value.Adapt<BrandModel>();
     }
 
     public async Task<Result> DeleteAsync(Guid brandId)
@@ -75,5 +88,35 @@ public class BrandService : IBrandService
             return brandEntity.ToResult();
         
         return await _unitOfWork.Brand.DeleteAsync(brandId);
+    }
+    
+    private string ResizeImageTo1080pAndConvertToBase64(string base64Input)
+    {
+        // Convert base64 string to byte array
+        byte[] imageBytes = Convert.FromBase64String(base64Input);
+
+        using (MemoryStream inputMs = new MemoryStream(imageBytes))
+        {
+            using (Image image = Image.Load(inputMs))
+            {
+                double scaleFactor = Math.Min(1920 / (double)image.Width, 1080 / (double)image.Height);
+
+                image.Mutate(x => x.Resize(new ResizeOptions
+                {
+                    Mode = ResizeMode.Stretch,
+                    Size = new Size((int)(image.Width * scaleFactor), (int)(image.Height * scaleFactor))
+                }));
+
+                using (MemoryStream outputMs = new MemoryStream())
+                {
+                    image.Save(outputMs, new PngEncoder());
+                    byte[] resizedImageBytes = outputMs.ToArray();
+
+                    // Convert byte[] to Base64 String
+                    string base64String = Convert.ToBase64String(resizedImageBytes);
+                    return base64String;
+                }
+            }
+        }
     }
 }

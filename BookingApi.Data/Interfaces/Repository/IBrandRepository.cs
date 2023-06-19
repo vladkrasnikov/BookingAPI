@@ -9,6 +9,6 @@ public interface IBrandRepository
     Task<Result<Brand>> GetAsync(Guid brandId);
     Task<Result<Brand>> GetBrandInCompanyAsync(Brand brand);
     Task<Result<Brand>> CreateAsync(Brand brand);
-    Task<Result<Brand>> UpdateAsync(Brand brand);
+    Result<Brand> UpdateAsync(Brand brand);
     Task<Result> DeleteAsync(Guid brandId);
 }

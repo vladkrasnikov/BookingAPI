@@ -1,4 +1,5 @@
-﻿using BookingApi.Services.Interfaces;
+﻿using System.Security.Claims;
+using BookingApi.Services.Interfaces;
 using BookingApi.Services.Model.Reservation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +43,8 @@ public class ReservationController : Controller
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Delete(Guid id)
     {
-        await _reservationService.DeleteAsync(id);
+        var userId = Guid.Parse(User.FindFirstValue("Id"));
+        await _reservationService.DeleteAsync(userId, id);
         return Ok();
     }
 

@@ -19,5 +19,5 @@ public interface IReservationService
     
     public Task<Result<ReservationModel>> UpdateAsync(Guid id, AddOrUpdateReservationModel addOrUpdateReservationModel);
     
-    public Task<Result> DeleteAsync(Guid id);
+    public Task<Result> DeleteAsync(Guid userId, Guid id);
 }

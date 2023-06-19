@@ -28,6 +28,8 @@ public class BrandRepository : IBrandRepository
         {
             return Result.Fail("Entity not found");
         }
+        
+        _context.Entry(brandEntity).State = EntityState.Detached;
 
         return brandEntity;
     }
@@ -52,10 +54,9 @@ public class BrandRepository : IBrandRepository
         return brand;
     }
 
-    public async Task<Result<Brand>> UpdateAsync(Brand brand)
+    public Result<Brand> UpdateAsync(Brand brand)
     {
         _context.Brand.Update(brand);
-        await _context.SaveChangesAsync();
         return brand;
     }
 

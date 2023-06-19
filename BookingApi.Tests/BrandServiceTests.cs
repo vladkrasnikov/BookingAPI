@@ -103,7 +103,7 @@ public class BrandServiceTests
         var brand = new Brand { Id = Guid.NewGuid(), Name = "Test Brand" };
         var unitOfWorkMock = new Mock<IUnitOfWork>();
         unitOfWorkMock.Setup(uow => uow.Brand.GetAsync(brand.Id)).ReturnsAsync(Result.Ok(brand));
-        unitOfWorkMock.Setup(uow => uow.Brand.UpdateAsync(It.IsAny<Brand>())).ReturnsAsync(Result.Ok(new Brand { Id = brand.Id, Name = brandToUpdate.Name }));
+        unitOfWorkMock.Setup(uow => uow.Brand.UpdateAsync(It.IsAny<Brand>())).Returns(Result.Ok(new Brand { Id = brand.Id, Name = brandToUpdate.Name }));
         var brandService = new BrandService(unitOfWorkMock.Object);
         //Act
         var result = await brandService.UpdateAsync(brand.Id, brandToUpdate);

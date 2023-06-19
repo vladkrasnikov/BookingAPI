@@ -154,12 +154,17 @@ public class ReservationService : IReservationService
         return Result.Ok(updatedReservation.Adapt<ReservationModel>());
     }
 
-    public async Task<Result> DeleteAsync(Guid id)
+    public async Task<Result> DeleteAsync(Guid userId, Guid id)
     {
         var reservation = await _unitOfWork.Reservation.GetAsync(id);
         if (reservation == null)
         {
             return Result.Fail("Reservation not found");
+        }
+        
+        if(userId != reservation.UserId)
+        {
+            return Result.Fail("User is not authorized to delete this reservation");
         }
 
         await _unitOfWork.Reservation.DeleteAsync(id);
