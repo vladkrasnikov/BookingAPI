@@ -6,7 +6,6 @@ project.lock.json
 nupkg/
 
 # Visual Studio Code
-.vscode
 
 # Rider
 .idea
@@ -35,3 +34,7 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
+.gitignore

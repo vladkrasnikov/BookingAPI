@@ -58,12 +58,11 @@ public class CompanyRepository : ICompanyRepository
         return company;
     }
     
-    public async Task<Result<Company>> UpdateAsync(Guid id, Company company)
+    public Result<Company> UpdateAsync(Guid id, Company company)
     {
         _context.Company.Update(company);
-        await _context.SaveChangesAsync();
         
-        return company;
+        return Result.Ok(company);
     }
     
     public async Task<Result> DeleteAsync(Guid id)
