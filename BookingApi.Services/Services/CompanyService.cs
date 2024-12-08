@@ -47,7 +47,8 @@ public class CompanyService : ICompanyService
         {
             return companyResult.ToResult<CompanyModel>();
         }
-        var result = await _unitOfWork.Company.UpdateAsync(id, addOrUpdateCompanyModel.Adapt<Company>());
+        var result = _unitOfWork.Company.UpdateAsync(id, addOrUpdateCompanyModel.Adapt<Company>());
+        await _unitOfWork.SaveAsync();
         return result.EntityToModel<Company, CompanyModel>();
     }
     

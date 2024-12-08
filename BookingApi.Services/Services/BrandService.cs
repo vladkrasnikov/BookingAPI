@@ -55,8 +55,8 @@ public class BrandService : IBrandService
             return Result.Fail("User is not authorized to create brand in this company");
         }
         
-        if(!String.IsNullOrEmpty(brand.Image))
-            brand.Image = ResizeImageTo1080pAndConvertToBase64(brand.Image);
+        // if(!String.IsNullOrEmpty(brand.Image))
+        //     brand.Image = ResizeImageTo1080pAndConvertToBase64(brand.Image);
         
         var brandResult = await _unitOfWork.Brand.CreateAsync(brand.Adapt<Brand>());
         return brandResult.Value.Adapt<BrandModel>();
@@ -68,8 +68,8 @@ public class BrandService : IBrandService
         if (brandEntity.IsFailed)
             return brandEntity.ToResult();
 
-        if(!String.IsNullOrEmpty(brand.Image))
-            brand.Image = ResizeImageTo1080pAndConvertToBase64(brand.Image);
+        // if(!String.IsNullOrEmpty(brand.Image))
+        //     brand.Image = ResizeImageTo1080pAndConvertToBase64(brand.Image);
         
         var mappedBrand = brand.Adapt<Brand>();
         mappedBrand.Id = id;
